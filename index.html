@@ -1,1 +1,2410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Maison Médicale HALS-GUINÉE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<style>
+/* ================================================================
+   VARIABLES GLOBALES
+   ================================================================ */
+:root {
+  --v1:#006B45; --v2:#00A86B; --vp:#e8f5ef;
+  --or:#D4A017; --orp:#fff8e1;
+  --bg:#F7FAF8; --wh:#ffffff;
+  --gr:#F0F2F0; --g2:#6b7280; --g3:#374151;
+  --ro:#DC2626; --og:#D97706; --bl:#2563EB; --pu:#7C3AED;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,107,69,.08);
+  --sh2:0 4px 6px rgba(0,0,0,.07),0 10px 30px rgba(0,107,69,.12);
+  --sh3:0 20px 60px rgba(0,0,0,.15);
+  --r:16px; --r2:10px; --r3:8px;
+  --sidebar:260px;
+}
 
+/* ================================================================
+   RESET & BASE
+   ================================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--g3);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;line-height:1.2}
+button{cursor:pointer;border:none;outline:none;font-family:'Nunito',sans-serif;transition:all .18s}
+input,select,textarea{
+  font-family:'Nunito',sans-serif;font-size:.93rem;
+  border:1.5px solid #e5e7eb;border-radius:var(--r3);
+  padding:9px 12px;width:100%;background:var(--wh);
+  transition:border-color .2s,box-shadow .2s;color:var(--g3);
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--v1);box-shadow:0 0 0 3px rgba(0,107,69,.1);outline:none
+}
+label{font-weight:700;font-size:.8rem;display:block;margin-bottom:5px;
+      color:var(--g2);text-transform:uppercase;letter-spacing:.5px}
+a{color:var(--v1);text-decoration:none}
+img{max-width:100%}
+
+
+/* ================================================================
+   ICÔNES IMAGES — BADGES & ILLUSTRATIONS
+   ================================================================ */
+.ico-img {
+  width: 1.1em; height: 1.1em;
+  object-fit: contain; vertical-align: middle;
+  flex-shrink: 0;
+}
+.ico-img-lg {
+  width: 28px; height: 28px;
+  object-fit: contain; vertical-align: middle;
+}
+.ico-img-xl {
+  width: 42px; height: 42px;
+  object-fit: contain;
+}
+/* Carte produit — image icône catégorie */
+.cat-icon-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: .71rem; color: var(--v1); background: var(--vp);
+  border-radius: 4px; padding: 2px 8px;
+  display: inline-block; margin-bottom: 6px; font-weight: 700;
+}
+/* Bouton avec image */
+.btn img { width:16px; height:16px; object-fit:contain; flex-shrink:0; }
+.btn-sm img { width:13px; height:13px; }
+.btn-lg img { width:18px; height:18px; }
+/* Nav btn image */
+.nav-btn img { width:17px; height:17px; object-fit:contain; flex-shrink:0; }
+.drawer-btn img { width:20px; height:20px; object-fit:contain; flex-shrink:0; }
+.smenu-btn img { width:18px; height:18px; object-fit:contain; flex-shrink:0; }
+
+/* ================================================================
+   ICÔNES SVG INLINE (définies une fois, réutilisables partout)
+   ================================================================ */
+.ico{display:inline-flex;align-items:center;justify-content:center;
+     width:1em;height:1em;flex-shrink:0}
+.ico svg{width:100%;height:100%;fill:currentColor}
+
+/* ================================================================
+   BOUTONS — SYSTÈME COMPLET
+   ================================================================ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+     border-radius:var(--r3);padding:9px 18px;font-weight:700;font-size:.88rem;
+     transition:all .18s;white-space:nowrap;cursor:pointer;border:none}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--v1);color:#fff;box-shadow:0 2px 8px rgba(0,107,69,.3)}
+.btn-primary:hover{background:var(--v2);box-shadow:0 4px 14px rgba(0,107,69,.4);transform:translateY(-1px)}
+.btn-secondary{background:var(--gr);color:var(--g3);border:1.5px solid #e5e7eb}
+.btn-secondary:hover{background:#e5e7eb}
+.btn-danger{background:var(--ro);color:#fff;box-shadow:0 2px 8px rgba(220,38,38,.25)}
+.btn-danger:hover{background:#b91c1c;transform:translateY(-1px)}
+.btn-blue{background:var(--bl);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.btn-blue:hover{background:#1d4ed8;transform:translateY(-1px)}
+.btn-orange{background:var(--og);color:#fff;box-shadow:0 2px 8px rgba(217,119,6,.25)}
+.btn-orange:hover{background:#b45309}
+.btn-purple{background:var(--pu);color:#fff}
+.btn-purple:hover{background:#6d28d9}
+.btn-gold{background:var(--or);color:#1a1a1a;font-weight:800}
+.btn-gold:hover{background:#b8860b}
+.btn-sm{padding:5px 11px;font-size:.78rem;gap:5px}
+.btn-lg{padding:12px 26px;font-size:.97rem}
+.btn-icon{padding:8px;border-radius:var(--r3);aspect-ratio:1}
+.btn-outline{background:transparent;border:2px solid var(--v1);color:var(--v1)}
+.btn-outline:hover{background:var(--v1);color:#fff}
+
+/* ================================================================
+   ÉCRAN SETUP SUPABASE
+   ================================================================ */
+#setup{display:none;min-height:100vh;
+  background:linear-gradient(145deg,#003d26 0%,#006B45 60%,#00A86B 100%);
+  align-items:center;justify-content:center;padding:20px}
+#setup.on{display:flex}
+.sc{background:#fff;border-radius:20px;padding:36px 32px;
+    max-width:580px;width:100%;box-shadow:var(--sh3)}
+.sc-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.sc-head h2{color:var(--v1);font-size:1.5rem}
+.sc .sub{color:var(--g2);font-size:.88rem;margin-bottom:20px;padding-left:52px}
+.step{display:flex;gap:12px;align-items:flex-start;
+      background:var(--gr);border-radius:var(--r3);padding:12px 14px;margin-bottom:9px}
+.step-num{background:var(--v1);color:#fff;border-radius:50%;
+          width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+          font-size:.75rem;font-weight:800;flex-shrink:0;margin-top:1px}
+.step p{font-size:.84rem;line-height:1.7;color:var(--g3)}
+.step strong{color:var(--v1)}
+.step code{background:#1e1e1e;color:#7ec8a0;padding:1px 6px;
+           border-radius:4px;font-size:.78rem;font-family:monospace}
+.sql-block{background:#1e1e1e;color:#a8d8b0;border-radius:var(--r3);
+           padding:14px;font-family:monospace;font-size:.74rem;
+           line-height:1.6;margin:8px 0;overflow-x:auto;white-space:pre;
+           max-height:220px;overflow-y:auto}
+.fg0{margin-bottom:11px}
+
+/* ================================================================
+   LAYOUT PRINCIPAL (sidebar + contenu)
+   ================================================================ */
+#app{display:none;min-height:100vh}
+#app.on{display:flex;flex-direction:column}
+
+/* ================================================================
+   HEADER (barre du haut)
+   ================================================================ */
+.topbar{
+  background:linear-gradient(135deg,var(--v1) 50%,var(--v2));
+  color:#fff;position:sticky;top:0;z-index:300;
+  box-shadow:0 2px 20px rgba(0,0,0,.2);
+}
+.topbar-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 24px;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:12px;min-width:0}
+.brand-logo{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--or);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+  box-shadow:0 2px 10px rgba(0,0,0,.25);
+}
+.brand-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.brand-text{min-width:0}
+.brand-text h1{font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand-text small{font-size:.72rem;opacity:.82;display:block}
+.topbar-nav{display:flex;align-items:center;gap:8px}
+/* Bouton hamburger mobile */
+.ham-btn{display:none;background:rgba(255,255,255,.15);color:#fff;
+         border-radius:var(--r3);padding:8px;border:none;cursor:pointer}
+
+/* Boutons navigation header */
+.nav-btn{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.15);color:#fff;
+  border-radius:var(--r3);padding:8px 14px;
+  font-size:.84rem;font-weight:700;border:none;
+  transition:background .18s;position:relative;
+}
+.nav-btn:hover{background:rgba(255,255,255,.28)}
+.nav-btn.active{background:var(--or);color:#1a1a1a}
+.nav-btn svg{width:16px;height:16px;fill:currentColor;flex-shrink:0}
+#cbg{
+  background:var(--ro);color:#fff;border-radius:50%;
+  width:18px;height:18px;font-size:.62rem;font-weight:800;
+  display:inline-flex;align-items:center;justify-content:center;
+  position:absolute;top:-6px;right:-6px;
+}
+/* Indicateur connexion */
+.conn-pill{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.12);border-radius:20px;
+  padding:4px 10px;font-size:.73rem;
+}
+.cdot{width:7px;height:7px;border-radius:50%;background:#9ca3af;flex-shrink:0;transition:background .3s}
+.cdot.live{background:#4ade80;box-shadow:0 0 6px #4ade80}
+
+/* ================================================================
+   CONTENU PRINCIPAL
+   ================================================================ */
+.main-content{
+  max-width:1400px;margin:0 auto;
+  width:100%;padding:24px 20px;
+  flex:1;
+}
+
+/* ================================================================
+   PAGES
+   ================================================================ */
+.page{display:none;animation:pgIn .25s ease}
+.page.on{display:block}
+@keyframes pgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ================================================================
+   BANNIÈRE ACCUEIL
+   ================================================================ */
+.hero{
+  background:linear-gradient(135deg,var(--v1) 0%,#005538 40%,var(--v2) 100%);
+  color:#fff;border-radius:var(--r);padding:36px 32px;
+  margin-bottom:28px;display:grid;
+  grid-template-columns:1fr auto;gap:24px;
+  position:relative;overflow:hidden;
+}
+.hero::after{content:'⚕';position:absolute;right:-10px;top:-30px;
+             font-size:10rem;opacity:.05;pointer-events:none;line-height:1}
+.hero h2{font-size:1.75rem;margin-bottom:8px}
+.hero p{opacity:.88;font-size:.95rem;margin-bottom:16px}
+.hero-chips{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.hchip{
+  background:rgba(255,255,255,.18);border-radius:8px;
+  padding:7px 14px;font-size:.83rem;
+  display:flex;align-items:center;gap:7px;
+  backdrop-filter:blur(4px);white-space:nowrap;
+}
+.hchip svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+
+/* ================================================================
+   SECTION TITRE
+   ================================================================ */
+.sec-title{
+  font-size:1.35rem;color:var(--v1);
+  border-left:4px solid var(--or);padding-left:12px;
+  margin-bottom:18px;display:flex;align-items:center;gap:10px;
+}
+.sec-title svg{width:22px;height:22px;fill:var(--v1)}
+
+/* ================================================================
+   BARRE RECHERCHE
+   ================================================================ */
+.search-row{
+  display:grid;grid-template-columns:1fr auto auto;
+  gap:10px;margin-bottom:20px;align-items:end;
+}
+.search-row input{max-width:none}
+.search-row select{min-width:160px}
+
+/* ================================================================
+   GRILLE PRODUITS — RESPONSIVE
+   ================================================================ */
+.pgrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:18px;
+}
+/* PC large */
+@media(min-width:1200px){.pgrid{grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}}
+/* Tablette */
+@media(min-width:768px) and (max-width:1199px){.pgrid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
+/* Mobile */
+@media(max-width:767px){.pgrid{grid-template-columns:repeat(2,1fr);gap:12px}}
+@media(max-width:360px){.pgrid{grid-template-columns:1fr}}
+
+.pcard{
+  background:var(--wh);border-radius:var(--r);
+  box-shadow:var(--sh);overflow:hidden;
+  display:flex;flex-direction:column;
+  transition:transform .22s,box-shadow .22s;
+  border:1px solid rgba(0,0,0,.04);
+}
+.pcard:hover{transform:translateY(-5px);box-shadow:var(--sh2)}
+.pimg{
+  width:100%;height:160px;background:var(--vp);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.6rem;color:var(--v1);overflow:hidden;
+}
+.pimg img{width:100%;height:160px;object-fit:cover;display:block}
+.pbody{padding:14px;flex:1;display:flex;flex-direction:column;gap:4px}
+.pname{font-weight:800;font-size:.95rem;color:var(--g3);line-height:1.3}
+.pcat{
+  font-size:.71rem;color:var(--v1);background:var(--vp);
+  border-radius:4px;padding:2px 8px;display:inline-flex;align-items:center;gap:3px;
+  width:fit-content;font-weight:700;
+}
+.pdesc{font-size:.8rem;color:var(--g2);flex:1;margin-top:2px;line-height:1.5}
+.pprice{font-size:1.1rem;font-weight:800;color:var(--v1);margin-top:4px}
+.pstock{font-size:.77rem;font-weight:700;display:flex;align-items:center;gap:4px}
+.pstock.ok{color:#059669} .pstock.out{color:var(--ro)}
+.pstock svg{width:13px;height:13px;fill:currentColor}
+
+/* ================================================================
+   PANIER
+   ================================================================ */
+.cart-wrap{overflow-x:auto;border-radius:var(--r);box-shadow:var(--sh);background:var(--wh)}
+.cart-tbl{width:100%;border-collapse:collapse;min-width:520px}
+.cart-tbl th{
+  background:var(--v1);color:#fff;padding:11px 12px;
+  text-align:left;font-size:.82rem;font-weight:700;
+}
+.cart-tbl th:first-child{border-radius:var(--r) 0 0 0}
+.cart-tbl th:last-child{border-radius:0 var(--r) 0 0}
+.cart-tbl td{padding:11px 12px;border-bottom:1px solid #f3f4f6;font-size:.86rem;vertical-align:middle}
+.cart-tbl tr:last-child td{border-bottom:none}
+.cart-tbl tr:hover td{background:#f9fafb}
+.qty-ctrl{display:flex;align-items:center;gap:6px}
+.qbtn{
+  background:var(--gr);border-radius:6px;
+  padding:3px 10px;font-size:1rem;font-weight:800;
+  border:1px solid #e5e7eb;color:var(--g3);
+  transition:background .15s;
+}
+.qbtn:hover{background:#e5e7eb}
+.qval{font-weight:800;min-width:24px;text-align:center;font-size:.95rem}
+.cart-total{
+  display:flex;justify-content:flex-end;align-items:center;gap:12px;
+  padding:16px;font-size:1.15rem;font-weight:800;color:var(--v1);
+  border-top:2px solid var(--vp);
+}
+
+/* ================================================================
+   FORMULAIRE COMMANDE
+   ================================================================ */
+.order-wrap{
+  display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;
+}
+@media(max-width:900px){.order-wrap{grid-template-columns:1fr}}
+.order-form{background:var(--wh);border-radius:var(--r);box-shadow:var(--sh);padding:24px}
+.order-recap{background:var(--wh);border-radius:var(--r);box-shadow:var(--sh);padding:20px}
+.fgrp{margin-bottom:14px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.frow{grid-template-columns:1fr}}
+.pay-info{
+  background:linear-gradient(135deg,var(--orp),#fffde7);
+  border:1.5px solid #fbbf24;border-radius:var(--r);
+  padding:18px;margin-bottom:18px;
+}
+.pay-info h3{color:#92400e;font-size:1rem;margin-bottom:8px;
+             display:flex;align-items:center;gap:7px}
+.pay-info h3 svg{width:18px;height:18px;fill:#92400e}
+.pay-info p{font-size:.86rem;margin-bottom:4px;color:var(--g3)}
+.pay-info strong{color:var(--v1);font-size:1.08rem;font-weight:800}
+
+/* ================================================================
+   PAGE CONFIRMATION
+   ================================================================ */
+.confirm-box{
+  max-width:500px;margin:40px auto;text-align:center;
+  background:var(--wh);border-radius:var(--r);
+  box-shadow:var(--sh2);padding:40px 32px;
+}
+.confirm-icon{font-size:4.5rem;display:block;
+              animation:pop .5s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.15)}100%{transform:scale(1)}}
+.code-box{
+  background:var(--vp);border:2px dashed var(--v1);
+  border-radius:var(--r);padding:20px;margin:20px 0;
+}
+.code-num{
+  font-family:'Courier New',monospace;font-size:2rem;
+  font-weight:800;letter-spacing:7px;color:var(--v1);
+  display:block;margin:8px 0;
+}
+
+/* ================================================================
+   ADMIN — LOGIN
+   ================================================================ */
+.login-wrap{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-card{
+  background:var(--wh);border-radius:var(--r);
+  box-shadow:var(--sh3);padding:40px 36px;
+  max-width:400px;width:100%;
+}
+.login-card .lc-head{text-align:center;margin-bottom:28px}
+.login-card .lc-head .lc-icon{
+  width:72px;height:72px;border-radius:50%;
+  background:var(--vp);display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;
+}
+.login-card .lc-head .lc-icon svg{width:36px;height:36px;fill:var(--v1)}
+.login-card h2{color:var(--v1);font-size:1.5rem}
+.login-card p{color:var(--g2);font-size:.88rem}
+.show-pwd{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;padding:4px;color:var(--g2);
+}
+.show-pwd:hover{color:var(--v1)}
+.pwd-wrap{position:relative}
+.pwd-wrap input{padding-right:40px}
+
+/* ================================================================
+   ADMIN — LAYOUT DASHBOARD
+   ================================================================ */
+.admin-layout{display:flex;gap:20px;align-items:flex-start}
+
+/* Sidebar admin */
+.admin-sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--wh);border-radius:var(--r);
+  box-shadow:var(--sh);padding:16px;
+  position:sticky;top:90px;
+}
+.sidebar-menu{display:flex;flex-direction:column;gap:4px}
+.smenu-btn{
+  display:flex;align-items:center;gap:10px;
+  border-radius:var(--r3);padding:10px 12px;
+  font-weight:700;font-size:.86rem;color:var(--g2);
+  background:none;border:none;cursor:pointer;
+  transition:all .18s;text-align:left;width:100%;
+}
+.smenu-btn svg{width:18px;height:18px;fill:currentColor;flex-shrink:0}
+.smenu-btn:hover{background:var(--vp);color:var(--v1)}
+.smenu-btn.on{background:var(--v1);color:#fff;box-shadow:0 2px 8px rgba(0,107,69,.3)}
+.smenu-btn .badge-count{
+  margin-left:auto;background:var(--ro);color:#fff;
+  border-radius:20px;padding:1px 7px;font-size:.7rem;font-weight:800;
+}
+.smenu-sep{height:1px;background:#e5e7eb;margin:8px 0}
+
+/* Contenu admin */
+.admin-content{flex:1;min-width:0}
+.apanel{display:none}
+.apanel.on{display:block;animation:pgIn .2s ease}
+
+/* ================================================================
+   STATS ADMIN (en haut du dashboard)
+   ================================================================ */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:14px;margin-bottom:22px;
+}
+@media(max-width:900px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.stats-row{grid-template-columns:repeat(2,1fr);gap:10px}}
+.stat-card{
+  background:var(--wh);border-radius:var(--r);
+  box-shadow:var(--sh);padding:16px 18px;
+  display:flex;align-items:center;gap:14px;
+  border-left:4px solid transparent;
+}
+.stat-card.green{border-color:var(--v1)}
+.stat-card.orange{border-color:var(--og)}
+.stat-card.blue{border-color:var(--bl)}
+.stat-card.red{border-color:var(--ro)}
+.stat-icon{
+  width:42px;height:42px;border-radius:var(--r3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.stat-icon svg{width:22px;height:22px}
+.stat-card.green .stat-icon{background:var(--vp);color:var(--v1)}
+.stat-card.green .stat-icon svg{fill:var(--v1)}
+.stat-card.orange .stat-icon{background:#fef3c7;color:var(--og)}
+.stat-card.orange .stat-icon svg{fill:var(--og)}
+.stat-card.blue .stat-icon{background:#eff6ff;color:var(--bl)}
+.stat-card.blue .stat-icon svg{fill:var(--bl)}
+.stat-card.red .stat-icon{background:#fef2f2;color:var(--ro)}
+.stat-card.red .stat-icon svg{fill:var(--ro)}
+.stat-val{font-size:1.5rem;font-weight:800;color:var(--g3);line-height:1}
+.stat-lbl{font-size:.76rem;color:var(--g2);margin-top:3px}
+
+/* ================================================================
+   TABLEAU COMMANDES
+   ================================================================ */
+.filter-tabs{display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap}
+.ftab{
+  display:flex;align-items:center;gap:6px;
+  border-radius:20px;padding:6px 14px;
+  font-weight:700;font-size:.8rem;
+  border:2px solid transparent;cursor:pointer;transition:.18s;
+}
+.ftab svg{width:13px;height:13px;fill:currentColor}
+.ftab.tous{background:#f5f3ff;border-color:#7c3aed;color:#7c3aed}
+.ftab.att{background:#fff7ed;border-color:var(--og);color:var(--og)}
+.ftab.pay{background:#eff6ff;border-color:var(--bl);color:var(--bl)}
+.ftab.liv{background:var(--vp);border-color:var(--v1);color:var(--v1)}
+.ftab.on{filter:brightness(.85);font-weight:800}
+
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);box-shadow:var(--sh);background:var(--wh)}
+.otbl{width:100%;border-collapse:collapse;min-width:640px}
+.otbl th{background:var(--v1);color:#fff;padding:11px 10px;text-align:left;font-size:.81rem;font-weight:700}
+.otbl th:first-child{border-radius:var(--r) 0 0 0}
+.otbl th:last-child{border-radius:0 var(--r) 0 0}
+.otbl td{padding:10px 10px;border-bottom:1px solid #f3f4f6;font-size:.83rem;vertical-align:middle}
+.otbl tr:last-child td{border-bottom:none}
+.otbl tr:hover td{background:#f9fafb}
+
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  border-radius:20px;padding:3px 10px;font-size:.74rem;font-weight:700;white-space:nowrap;
+}
+.badge svg{width:11px;height:11px;fill:currentColor}
+.ba{background:#fff7ed;color:var(--og)}
+.bp2{background:#eff6ff;color:var(--bl)}
+.bl2{background:var(--vp);color:var(--v1)}
+
+/* ================================================================
+   FORMULAIRE AJOUT PRODUIT
+   ================================================================ */
+.prod-form-card{background:var(--wh);border-radius:var(--r);box-shadow:var(--sh);padding:26px}
+.img-drop{
+  border:2px dashed #d1d5db;border-radius:var(--r);
+  padding:24px;text-align:center;cursor:pointer;
+  transition:all .2s;min-height:110px;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:8px;background:#fafafa;
+}
+.img-drop:hover{border-color:var(--v1);background:var(--vp)}
+.img-drop.has-img{padding:12px;border-color:var(--v1);background:var(--vp)}
+.img-drop img{max-width:100%;max-height:140px;border-radius:var(--r3);object-fit:cover}
+.img-drop .drop-icon{width:36px;height:36px;fill:var(--g2)}
+.img-drop .drop-txt{color:var(--g2);font-size:.85rem;line-height:1.6}
+.img-drop .drop-txt strong{color:var(--v1)}
+
+/* ================================================================
+   LISTE PRODUITS ADMIN — GRILLE
+   ================================================================ */
+.admin-pgrid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:14px;
+}
+.aprod-card{
+  background:var(--wh);border-radius:var(--r);
+  box-shadow:var(--sh);padding:14px;
+  display:flex;gap:12px;align-items:flex-start;
+  border:1px solid rgba(0,0,0,.04);
+  transition:box-shadow .2s;
+}
+.aprod-card:hover{box-shadow:var(--sh2)}
+.aprod-thumb{
+  width:60px;height:60px;border-radius:var(--r3);
+  background:var(--vp);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;flex-shrink:0;
+}
+.aprod-thumb img{width:100%;height:100%;object-fit:cover}
+.aprod-info{flex:1;min-width:0}
+.aprod-name{font-weight:800;font-size:.92rem;color:var(--g3);margin-bottom:2px}
+.aprod-price{color:var(--v1);font-weight:800;font-size:.9rem}
+.aprod-stock{font-size:.76rem;color:var(--g2);margin-top:1px}
+.aprod-actions{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+
+/* ================================================================
+   HISTORIQUE — FILTRES
+   ================================================================ */
+.hist-filters{
+  display:grid;grid-template-columns:auto auto 1fr auto auto;
+  gap:10px;margin-bottom:16px;align-items:end;flex-wrap:wrap;
+}
+@media(max-width:800px){.hist-filters{grid-template-columns:1fr 1fr}}
+
+/* ================================================================
+   PARAMÈTRES — GRILLE
+   ================================================================ */
+.settings-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:20px;
+}
+@media(max-width:700px){.settings-grid{grid-template-columns:1fr}}
+.settings-card{background:var(--wh);border-radius:var(--r);box-shadow:var(--sh);padding:22px}
+.settings-card h3{
+  font-size:1rem;color:var(--g3);margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;padding-bottom:12px;
+  border-bottom:1px solid #f3f4f6;
+}
+.settings-card h3 svg{width:18px;height:18px;fill:var(--v1)}
+.logo-drop{
+  border:2px dashed #d1d5db;border-radius:var(--r);
+  padding:18px;text-align:center;cursor:pointer;
+  transition:all .2s;min-height:90px;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:7px;
+}
+.logo-drop:hover{border-color:var(--v1);background:var(--vp)}
+.logo-drop img{max-width:110px;max-height:70px;object-fit:contain;border-radius:6px}
+
+/* ================================================================
+   MODAL
+   ================================================================ */
+.modal-ov{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:1000;
+  align-items:center;justify-content:center;padding:16px;
+}
+.modal-ov.on{display:flex}
+.modal-box{
+  background:var(--wh);border-radius:var(--r);
+  padding:28px;max-width:540px;width:100%;
+  max-height:90vh;overflow-y:auto;
+  position:relative;box-shadow:var(--sh3);
+  animation:pgIn .22s ease;
+}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  background:var(--gr);border-radius:50%;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  color:var(--g2);border:none;cursor:pointer;transition:all .18s;
+}
+.modal-close:hover{background:#e5e7eb;color:var(--ro)}
+.modal-close svg{width:16px;height:16px;fill:currentColor}
+
+/* ================================================================
+   FACTURE
+   ================================================================ */
+.fac{
+  font-family:'Courier New',monospace;font-size:12.5px;
+  max-width:400px;margin:0 auto;
+  border:2px solid #1a1a1a;padding:20px;
+  background:#fff;
+}
+.fac-logo{text-align:center;margin-bottom:8px}
+.fac-logo img{max-width:80px;max-height:60px;object-fit:contain}
+.fac h2{text-align:center;font-size:.97rem;font-family:'Courier New',monospace;font-weight:800;margin-bottom:2px}
+.fac .fac-sub{text-align:center;font-size:.74rem;color:#555;margin-bottom:8px}
+.fac hr{border:none;border-top:1px solid #000;margin:7px 0}
+.fac hr.thick{border-top:2px solid #000}
+.fac .frow{display:flex;justify-content:space-between;font-size:.77rem;margin-bottom:2px}
+.fac table{width:100%;border-collapse:collapse;font-size:.75rem}
+.fac table th{border-bottom:1px solid #000;padding:3px 4px;text-align:left;font-weight:800}
+.fac table td{padding:3px 4px;border-bottom:1px solid #eee}
+.fac .ftot{font-weight:800;border-top:2px solid #000}
+.fac .fcode{text-align:center;font-size:1.1rem;font-weight:800;letter-spacing:5px;margin:10px 0;padding:8px;border:2px solid #000}
+.fac .ffoot{text-align:center;font-size:.69rem;color:#666;margin-top:6px}
+
+/* ================================================================
+   SPINNER
+   ================================================================ */
+.spin-wrap{display:flex;align-items:center;justify-content:center;padding:50px;flex-direction:column;gap:12px}
+.spin{width:36px;height:36px;border:3px solid var(--vp);border-top-color:var(--v1);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ================================================================
+   EMPTY STATE
+   ================================================================ */
+.empty-state{text-align:center;padding:44px 20px;color:var(--g2)}
+.empty-state svg{width:48px;height:48px;fill:var(--g2);opacity:.4;margin-bottom:12px;display:block;margin-left:auto;margin-right:auto}
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+footer{
+  background:var(--v1);color:rgba(255,255,255,.85);
+  text-align:center;padding:20px 16px;
+  font-size:.82rem;line-height:1.9;
+}
+footer strong{color:var(--or)}
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  display:flex;align-items:center;gap:9px;
+  background:#1a1a1a;color:#fff;
+  padding:12px 18px;border-radius:var(--r);
+  box-shadow:var(--sh3);font-weight:700;font-size:.86rem;
+  z-index:9999;transform:translateY(100px);opacity:0;
+  transition:all .3s cubic-bezier(.175,.885,.32,1.275);
+  max-width:300px;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.ok{background:var(--v1)}
+.toast.err{background:var(--ro)}
+.toast.war{background:var(--og)}
+.toast svg{width:18px;height:18px;fill:currentColor;flex-shrink:0}
+
+/* ================================================================
+   PROGRESS BAR UPLOAD
+   ================================================================ */
+.upbar-wrap{display:none;margin-top:10px}
+.upbar-bg{background:var(--gr);border-radius:5px;height:6px;overflow:hidden}
+.upbar{height:100%;background:var(--v1);width:0%;transition:width .3s;border-radius:5px}
+
+/* ================================================================
+   PRINT
+   ================================================================ */
+#pzone{display:none}
+@media print{
+  body>*:not(#pzone){display:none!important}
+  #pzone{display:block!important;padding:15px}
+}
+
+/* ================================================================
+   MOBILE NAV (drawer)
+   ================================================================ */
+.mobile-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.5);z-index:400;
+}
+.mobile-overlay.on{display:block}
+.mobile-drawer{
+  position:fixed;left:-280px;top:0;bottom:0;
+  width:280px;background:var(--wh);
+  z-index:500;transition:left .3s cubic-bezier(.4,0,.2,1);
+  box-shadow:var(--sh3);padding:20px 16px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.mobile-drawer.on{left:0}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #f3f4f6}
+.drawer-header h3{color:var(--v1);font-size:1rem}
+.drawer-btn{
+  display:flex;align-items:center;gap:12px;
+  border-radius:var(--r3);padding:11px 14px;
+  font-weight:700;font-size:.9rem;color:var(--g3);
+  background:none;border:none;cursor:pointer;text-align:left;width:100%;
+  transition:all .18s;
+}
+.drawer-btn svg{width:20px;height:20px;fill:currentColor;flex-shrink:0}
+.drawer-btn:hover{background:var(--vp);color:var(--v1)}
+
+/* ================================================================
+   RESPONSIVE GÉNÉRAL
+   ================================================================ */
+@media(max-width:1024px){
+  .admin-sidebar{display:none}
+  .admin-layout{flex-direction:column}
+}
+@media(max-width:768px){
+  .topbar-inner{padding:10px 14px;gap:8px}
+  .brand-text h1{font-size:.88rem}
+  .ham-btn{display:flex}
+  /* Cacher les nav-btn sur mobile — remplacés par le drawer */
+  .topbar-nav .nav-btn{display:none}
+  .topbar-nav .conn-pill{display:none}
+  .main-content{padding:16px 12px}
+  .hero{grid-template-columns:1fr;padding:22px 18px}
+  .hero-chips{align-items:flex-start}
+  .hero h2{font-size:1.35rem}
+  .search-row{grid-template-columns:1fr;gap:8px}
+  .search-row select{min-width:auto}
+  .stats-row{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat-card{padding:12px 14px}
+  .stat-val{font-size:1.2rem}
+  .hist-filters{grid-template-columns:1fr 1fr}
+  .settings-grid{grid-template-columns:1fr}
+  .login-card{padding:28px 22px}
+  .frow{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .hero{padding:18px 14px}
+  .confirm-box{padding:28px 18px}
+  .code-num{font-size:1.5rem;letter-spacing:4px}
+  .order-form,.order-recap{padding:16px}
+  .prod-form-card{padding:16px}
+}
+/* Tablet — montrer nav-btn mais pas le ham */
+@media(min-width:769px) and (max-width:1024px){
+  .topbar-nav .nav-btn{display:flex}
+  .topbar-nav .conn-pill{display:flex}
+  .ham-btn{display:none}
+}
+@media(min-width:1025px){
+  .ham-btn{display:none}
+  .topbar-nav .nav-btn{display:flex}
+}
+
+/* ================================================================
+   UTILITAIRES
+   ================================================================ */
+.mt8{margin-top:8px} .mt12{margin-top:12px} .mt20{margin-top:20px}
+.mb8{margin-bottom:8px} .mb12{margin-bottom:12px}
+.flex{display:flex} .flex-gap{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.flex-center{display:flex;align-items:center;justify-content:center}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{background:var(--wh);border-radius:var(--r);box-shadow:var(--sh);padding:20px}
+.text-sm{font-size:.82rem} .text-muted{color:var(--g2)}
+.fw8{font-weight:800} .fc-green{color:var(--v1)}
+</style>
+</head>
+<body>
+
+<div id="pzone"></div>
+
+<!-- ================================================================
+     ÉCRAN SETUP SUPABASE
+     ================================================================ -->
+<div id="setup">
+  <div class="sc">
+    <div class="sc-head">
+      <div style="width:44px;height:44px;background:var(--vp);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="var(--v1)"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <h2>Configurer Supabase</h2>
+    </div>
+    <p class="sub">Base de données temps réel pour votre pharmacie</p>
+
+    <div class="step"><div class="step-num">1</div><p>Allez sur <a href="https://supabase.com" target="_blank"><strong>supabase.com</strong></a> → connectez-vous → <strong>New Project</strong></p></div>
+    <div class="step"><div class="step-num">2</div><p>Dans <strong>SQL Editor</strong> → New Query → copiez-collez le SQL du fichier <strong>config.js</strong> (entre /* et */) → cliquez <code>Run ▶</code></p></div>
+    <div class="step"><div class="step-num">3</div><p>Dans <strong>Project Settings → API</strong> → copiez <strong>Project URL</strong> et la <strong>Publishable key</strong></p></div>
+
+    <div class="fg0" style="margin-top:16px">
+      <label>Project URL</label>
+      <input type="text" id="su" placeholder="https://xxxxxxxx.supabase.co">
+    </div>
+    <div class="fg0">
+      <label>Publishable Key</label>
+      <input type="text" id="sk" placeholder="sb_publishable_...">
+    </div>
+
+    <button class="btn btn-primary btn-lg" style="width:100%;margin-top:12px;justify-content:center" onclick="doConnect()">
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMyAxMFYzTDQgMTRoN3Y3bDktMTFoLTd6Ii8+PC9zdmc+" class="ico-img" alt="">
+      Connecter Supabase
+    </button>
+    <p id="serr" style="color:var(--ro);font-size:.83rem;margin-top:8px;text-align:center"></p>
+    <p style="text-align:center;margin-top:14px;font-size:.8rem;color:var(--g2)">
+      Pas encore de Supabase ?
+      <button onclick="useLocal()" style="background:none;color:var(--v1);font-weight:700;font-size:.8rem;text-decoration:underline;cursor:pointer;border:none">
+        Continuer en mode local
+      </button>
+    </p>
+  </div>
+</div>
+
+<!-- ================================================================
+     APPLICATION PRINCIPALE
+     ================================================================ -->
+<div id="app">
+
+<!-- HEADER -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <!-- Logo + Nom -->
+    <div class="brand">
+      <div class="brand-logo" id="logo-hdr">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white" id="logo-em"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1 id="hnm">Maison Médicale HALS-GUINÉE</h1>
+        <small id="hinf">Gn-Kankan-Kabada I | ☎ 622940262</small>
+      </div>
+    </div>
+
+    <!-- Navigation desktop/tablette -->
+    <div class="topbar-nav">
+      <button class="nav-btn" id="nav-home" onclick="gp('home')">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMCAyMHYtNmg0djZoNXYtOGgzTDEyIDMgMiAxMmgzdjh6Ii8+PC9zdmc+" id="ico-nav-home" class="ico-img" alt="">
+        Accueil
+      </button>
+
+      <button class="nav-btn" id="nav-cart" onclick="gp('cart')">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik03IDE4Yy0xLjEgMC0yIC45LTIgMnMuOSAyIDIgMiAyLS45IDItMi0uOS0yLTItMnpNMSAydjJoMmwzLjYgNy41OUw1LjI1IDE0Yy0uMTYuMjgtLjI1LjYxLS4yNS45NkM1IDE2LjEgNS45IDE3IDcgMTdoMTJ2LTJINy40MmMtLjE0IDAtLjI1LS4xMS0uMjUtLjI1bC4wMy0uMTIuOS0xLjYzSDE5Yy43NSAwIDEuNDEtLjQxIDEuNzUtMS4wM2wzLjU4LTYuNDlBMSAxIDAgMCAwIDIzLjQzIDRINS4yMWwtLjk0LTJIMXptMTYgMTZjLTEuMSAwLTIgLjktMiAycy45IDIgMiAyIDItLjkgMi0yLS45LTItMi0yeiIvPjwvc3ZnPg==" id="ico-nav-cart" class="ico-img" alt="">
+        Panier
+        <span id="cbg">0</span>
+      </button>
+
+      <!-- Bouton Admin — CACHÉ pour les clients, visible seulement si adminMode -->
+      <button class="nav-btn" id="nav-admin-btn" onclick="gp('login')" style="display:none">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0Q0QTAxNyI+PHBhdGggZD0iTTEyIDFMMyA1djZjMCA1LjU1IDMuODQgMTAuNzQgOSAxMiA1LjE2LTEuMjYgOS02LjQ1IDktMTJWNWwtOS00em0wIDRhMyAzIDAgMSAxIDAgNiAzIDMgMCAwIDEgMC02em0wIDEzYy0yLjUgMC00LjcxLTEuMjgtNi0zLjIyLjAzLTEuOTkgNC0zLjA4IDYtMy4wOCAxLjk5IDAgNS45NyAxLjA5IDYgMy4wOEE3LjI0IDcuMjQgMCAwIDEgMTIgMTh6Ii8+PC9zdmc+" id="ico-nav-admin" class="ico-img" alt="">
+        Admin
+      </button>
+
+      <!-- Bouton hamburger mobile -->
+      <button class="ham-btn" onclick="toggleDrawer()">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MENU MOBILE DRAWER -->
+<div class="mobile-overlay" id="mob-ov" onclick="toggleDrawer()"></div>
+<div class="mobile-drawer" id="mob-drawer">
+  <div class="drawer-header">
+    <h3>Menu</h3>
+    <button onclick="toggleDrawer()" style="background:none;border:none;cursor:pointer;color:var(--g2)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+  </div>
+  <button class="drawer-btn" onclick="gp('home');toggleDrawer()">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMCAyMHYtNmg0djZoNXYtOGgzTDEyIDMgMiAxMmgzdjh6Ii8+PC9zdmc+" id="ico-dr-home" class="ico-img" alt="">
+    Accueil
+  </button>
+  <button class="drawer-btn" onclick="gp('cart');toggleDrawer()">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik03IDE4Yy0xLjEgMC0yIC45LTIgMnMuOSAyIDIgMiAyLS45IDItMi0uOS0yLTItMnpNMSAydjJoMmwzLjYgNy41OUw1LjI1IDE0Yy0uMTYuMjgtLjI1LjYxLS4yNS45NkM1IDE2LjEgNS45IDE3IDcgMTdoMTJ2LTJINy40MmMtLjE0IDAtLjI1LS4xMS0uMjUtLjI1bC4wMy0uMTIuOS0xLjYzSDE5Yy43NSAwIDEuNDEtLjQxIDEuNzUtMS4wM2wzLjU4LTYuNDlBMSAxIDAgMCAwIDIzLjQzIDRINS4yMWwtLjk0LTJIMXptMTYgMTZjLTEuMSAwLTIgLjktMiAycy45IDIgMiAyIDItLjkgMi0yLS45LTItMi0yeiIvPjwvc3ZnPg==" id="ico-dr-cart" class="ico-img" alt="">
+    Panier
+  </button>
+  <!-- Bouton Admin dans drawer — aussi caché pour les clients -->
+  <button class="drawer-btn" id="drawer-admin-btn" onclick="gp('login');toggleDrawer()" style="display:none">
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0Q0QTAxNyI+PHBhdGggZD0iTTEyIDFMMyA1djZjMCA1LjU1IDMuODQgMTAuNzQgOSAxMiA1LjE2LTEuMjYgOS02LjQ1IDktMTJWNWwtOS00em0wIDRhMyAzIDAgMSAxIDAgNiAzIDMgMCAwIDEgMC02em0wIDEzYy0yLjUgMC00LjcxLTEuMjgtNi0zLjIyLjAzLTEuOTkgNC0zLjA4IDYtMy4wOCAxLjk5IDAgNS45NyAxLjA5IDYgMy4wOEE3LjI0IDcuMjQgMCAwIDEgMTIgMTh6Ii8+PC9zdmc+" id="ico-dr-admin" class="ico-img" alt="">
+    Espace Admin
+  </button>
+  <!-- Lien secret admin (triple tap sur le logo) -->
+  <div style="margin-top:auto;padding-top:20px;border-top:1px solid #f3f4f6">
+    <p style="font-size:.74rem;color:#d1d5db;text-align:center">
+      Tapez 3× sur le logo pour accéder à l'admin
+    </p>
+  </div>
+</div>
+
+<!-- CONTENU -->
+<div class="main-content">
+
+  <!-- PAGE ACCUEIL -->
+  <div id="pg-home" class="page on">
+    <div class="hero">
+      <div>
+        <h2>Votre Pharmacie en Ligne</h2>
+        <p>Commandez vos médicaments facilement — Paiement OrangeMoney</p>
+        <div class="flex-gap" style="margin-top:14px">
+          <button class="btn btn-gold" onclick="gp('cart')">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik03IDE4Yy0xLjEgMC0yIC45LTIgMnMuOSAyIDIgMiAyLS45IDItMi0uOS0yLTItMnpNMSAydjJoMmwzLjYgNy41OUw1LjI1IDE0Yy0uMTYuMjgtLjI1LjYxLS4yNS45NkM1IDE2LjEgNS45IDE3IDcgMTdoMTJ2LTJINy40MmMtLjE0IDAtLjI1LS4xMS0uMjUtLjI1bC4wMy0uMTIuOS0xLjYzSDE5Yy43NSAwIDEuNDEtLjQxIDEuNzUtMS4wM2wzLjU4LTYuNDlBMSAxIDAgMCAwIDIzLjQzIDRINS4yMWwtLjk0LTJIMXptMTYgMTZjLTEuMSAwLTIgLjktMiAycy45IDIgMiAyIDItLjkgMi0yLS45LTItMi0yeiIvPjwvc3ZnPg==" id="ico-hero-cart" class="ico-img" alt="">
+            Voir mon panier
+          </button>
+        </div>
+      </div>
+      <div class="hero-chips">
+        <div class="hchip">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          <span id="badr">Gn-Kankan-Kabada I</span>
+        </div>
+        <div class="hchip">
+          <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+          <span id="btel">622940262</span>
+        </div>
+        <div class="hchip">
+          <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+          OrangeMoney: <span id="bom">+224 620 434 420</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <input type="text" id="srch" placeholder="🔍 Rechercher un produit, médicament..." oninput="fp()">
+      <select id="csl" onchange="fp()"><option value="">Toutes catégories</option></select>
+      <button class="btn btn-outline" onclick="fp()">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzZiNzI4MCI+PHBhdGggZD0iTTE1LjUgMTRoLS43OWwtLjI4LS4yN0E2LjQ3IDYuNDcgMCAwIDAgMTYgOS41IDYuNSA2LjUgMCAxIDAgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHoiLz48L3N2Zz4=" class="ico-img" alt="">
+        Filtrer
+      </button>
+    </div>
+
+    <h2 class="sec-title">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+      Nos Produits Disponibles
+    </h2>
+    <div id="pgd">
+      <div class="spin-wrap"><div class="spin"></div><p class="text-muted">Chargement des produits...</p></div>
+    </div>
+  </div>
+
+  <!-- PAGE PANIER -->
+  <div id="pg-cart" class="page">
+    <h2 class="sec-title">
+      <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59L5.25 14c-.16.28-.25.61-.25.96C5 16.1 5.9 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23.43 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+      Mon Panier
+    </h2>
+    <div id="cbd"></div>
+  </div>
+
+  <!-- PAGE COMMANDE -->
+  <div id="pg-order" class="page">
+    <h2 class="sec-title">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+      Finaliser la Commande
+    </h2>
+    <div class="order-wrap">
+      <div class="order-form">
+        <div class="pay-info">
+          <h3>
+            <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+            Paiement OrangeMoney
+          </h3>
+          <p>Envoyez le montant total sur ce numéro :</p>
+          <p><strong id="omn">+224 620 434 420</strong></p>
+          <p class="text-sm text-muted mt8">Notez le numéro de transaction Orange pour le renseigner ci-dessous.</p>
+        </div>
+        <div class="fgrp"><label>Nom complet *</label><input type="text" id="on" placeholder="Votre nom et prénom"></div>
+        <div class="frow">
+          <div class="fgrp"><label>Téléphone *</label><input type="tel" id="oph" placeholder="622000000"></div>
+          <div class="fgrp"><label>Réf. transaction Orange</label><input type="text" id="oref" placeholder="N° transaction"></div>
+        </div>
+        <div class="fgrp"><label>Adresse de livraison *</label><textarea id="oad" rows="2" placeholder="Quartier, rue, repère..."></textarea></div>
+        <div class="fgrp"><label>Note (optionnel)</label><textarea id="ont" rows="2" placeholder="Informations supplémentaires..."></textarea></div>
+        <div class="flex-gap mt12">
+          <button class="btn btn-primary btn-lg" onclick="placeOrder()">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMgMTJsLTEuNDIgMS40MUw5IDE5IDIxIDdsLTEuNDEtMS40MXoiLz48L3N2Zz4=" id="ico-confirm-order" class="ico-img" alt="">
+            Confirmez la commande
+          </button>
+          <button class="btn btn-secondary" onclick="gp('cart')">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMCAxMUg3LjgzbDUuNTktNS41OUwxMiA0bC04IDggOCA4IDEuNDEtMS40MUw3LjgzIDEzSDIwdi0yeiIvPjwvc3ZnPg==" class="ico-img" alt="">
+            Retour
+          </button>
+        </div>
+      </div>
+      <div class="order-recap" id="orcp"></div>
+    </div>
+  </div>
+
+  <!-- PAGE CONFIRMATION -->
+  <div id="pg-confirm" class="page">
+    <div class="confirm-box">
+      <span class="confirm-icon">✅</span>
+      <h2 style="margin-top:14px;color:var(--v1)">Commande envoyée !</h2>
+      <p class="text-muted mt8">La pharmacie a reçu votre commande. Gardez précieusement votre code.</p>
+      <div class="code-box">
+        <p class="fw8 mb8">Votre code de commande :</p>
+        <span class="code-num" id="ccd">---</span>
+        <p class="text-sm text-muted mt8">Utilisez ce code pour réclamer ou suivre votre commande.</p>
+      </div>
+      <div class="flex-gap flex-center mt12">
+        <button class="btn btn-blue" onclick="printFact(lastOrder)">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSA4SDVjLTEuNjYgMC0zIDEuMzQtMyAzdjZoNHY0aDEydi00aDR2LTZjMC0xLjY2LTEuMzQtMy0zLTN6bS0zIDExSDh2LTVoOHY1em0zLTdjLS41NSAwLTEtLjQ1LTEtMXMuNDUtMSAxLTEgMSAuNDUgMSAxLS40NSAxLTEgMXptLTEtOUg2djRoMTJWM3oiLz48L3N2Zz4=" class="ico-img" alt="">
+          Imprimer la facture
+        </button>
+        <button class="btn btn-primary" onclick="gp('home')">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMCAyMHYtNmg0djZoNXYtOGgzTDEyIDMgMiAxMmgzdjh6Ii8+PC9zdmc+" class="ico-img" alt="">
+          Retour à l'accueil
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE LOGIN ADMIN -->
+  <div id="pg-login" class="page">
+    <div class="login-wrap">
+      <div class="login-card">
+        <div class="lc-head">
+          <div class="lc-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 13c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08A7.24 7.24 0 0 1 12 18z"/></svg>
+          </div>
+          <h2>Espace Administrateur</h2>
+          <p>Maison Médicale HALS-GUINÉE</p>
+        </div>
+        <div class="fgrp">
+          <label>Mot de passe</label>
+          <div class="pwd-wrap">
+            <input type="password" id="apw" placeholder="Entrez le mot de passe" onkeydown="if(event.key==='Enter')doLogin()">
+            <button class="show-pwd" onclick="togglePwd()" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" id="eye-ico"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center" onclick="doLogin()">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0Q0QTAxNyI+PHBhdGggZD0iTTEyIDFMMyA1djZjMCA1LjU1IDMuODQgMTAuNzQgOSAxMiA1LjE2LTEuMjYgOS02LjQ1IDktMTJWNWwtOS00em0wIDRhMyAzIDAgMSAxIDAgNiAzIDMgMCAwIDEgMC02em0wIDEzYy0yLjUgMC00LjcxLTEuMjgtNi0zLjIyLjAzLTEuOTkgNC0zLjA4IDYtMy4wOCAxLjk5IDAgNS45NyAxLjA5IDYgMy4wOEE3LjI0IDcuMjQgMCAwIDEgMTIgMTh6Ii8+PC9zdmc+" class="ico-img" alt="">
+          Se connecter
+        </button>
+        <p id="lerr" style="color:var(--ro);margin-top:9px;font-size:.83rem;text-align:center"></p>
+        <p style="font-size:.72rem;color:#d1d5db;margin-top:14px;text-align:center">Mot de passe par défaut : admin2024</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE ADMIN -->
+  <div id="pg-admin" class="page">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:20px">
+      <h2 class="sec-title" style="margin-bottom:0">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        Administration
+      </h2>
+      <div class="flex-gap">
+        <button class="btn btn-danger btn-sm" onclick="doLogout()">
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xNyA3bC0xLjQxIDEuNDFMMTguMTcgMTFIOHYyaDEwLjE3bC0yLjU4IDIuNThMMTcgMTdsNS01ek00IDVoOFYzSDRjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoOHYtMkg0VjV6Ii8+PC9zdmc+" id="ico-logout" class="ico-img" alt="">
+          Déconnexion
+        </button>
+      </div>
+    </div>
+
+    <div class="admin-layout">
+      <!-- Sidebar -->
+      <div class="admin-sidebar">
+        <div class="sidebar-menu">
+          <button class="smenu-btn on" id="sm-orders" onclick="at('orders',this)">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSAzSDVjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoMTRjMS4xIDAgMi0uOSAyLTJWNWMwLTEuMS0uOS0yLTItMnptLTcgMTRIN3YtMmg1djJ6bTUtNEg3di0yaDEwdjJ6bTAtNEg3VjdoMTB2MnoiLz48L3N2Zz4=" id="ico-sm-orders" class="ico-img" alt="">
+            Commandes
+            <span class="badge-count" id="ord-count">0</span>
+          </button>
+          <button class="smenu-btn" id="sm-products" onclick="at('products',this)">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMCA2aC0yLjE4Yy4wNy0uNDQuMTgtLjg4LjE4LTEuMzZDMTggMi4wNSAxNS45NiAwIDEzLjM2IDBjLTEuMzEgMC0yLjQ4LjU1LTMuMzMgMS40NEw5IDMuNSA3Ljk2IDIuNDRDNy4xMS41NSA1Ljk1IDAgNC42NCAwIDIuMDQgMCAwIDIuMDUgMCA0LjY0YzAgLjQ4LjEuOTIuMTggMS4zNkgwdjEzYzAgMS4xLjkgMiAyIDJoMjBjMS4xIDAgMi0uOSAyLTJWOGMwLTEuMS0uOS0yLTItMnoiLz48L3N2Zz4=" id="ico-sm-products" class="ico-img" alt="">
+            Produits
+          </button>
+          <button class="smenu-btn" id="sm-addprod" onclick="at('addprod',this)">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSAxM2gtNnY2aC0ydi02SDV2LTJoNlY1aDJ2Nmg2djJ6Ii8+PC9zdmc+" id="ico-sm-addprod" class="ico-img" alt="">
+            Ajouter produit
+          </button>
+          <div class="smenu-sep"></div>
+          <button class="smenu-btn" id="sm-history" onclick="at('history',this)">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMyAzYy00Ljk3IDAtOSA0LjAzLTkgOUgxbDMuODkgMy44OS4wNy4xNEw5IDEySDZjMC0zLjg3IDMuMTMtNyA3LTdzNyAzLjEzIDcgNy0zLjEzIDctNyA3Yy0xLjkzIDAtMy42OC0uNzktNC45NC0yLjA2bC0xLjQyIDEuNDJBOC45NTQgOC45NTQgMCAwIDAgMTMgMjFjNC45NyAwIDktNC4wMyA5LTlzLTQuMDMtOS05LTl6bS0xIDV2NWw0LjI4IDIuNTQuNzItMS4yMS0zLjUtMi4wOFY4SDEyeiIvPjwvc3ZnPg==" id="ico-sm-history" class="ico-img" alt="">
+            Historique
+          </button>
+          <button class="smenu-btn" id="sm-categories" onclick="at('categories',this)">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAybC01LjUgOWgxMUwxMiAyem0wIDMuODRMMTMuOTMgOWgtMy44N0wxMiA1Ljg0ek0xNy41IDEzYy0yLjQ5IDAtNC41IDIuMDEtNC41IDQuNVMxNS4wMSAyMiAxNy41IDIyczQuNS0yLjAxIDQuNS00LjVTMTkuOTkgMTMgMTcuNSAxM3ptMCA3Yy0xLjM4IDAtMi41LTEuMTItMi41LTIuNVMxNi4xMiAxNSAxNy41IDE1czIuNSAxLjEyIDIuNSAyLjVTMTguODggMjAgMTcuNSAyMHpNMyAyMS41aDh2LThIM3Y4em0yLTZoNHY0SDV2LTR6Ii8+PC9zdmc+" id="ico-sm-cats" class="ico-img" alt="">
+            Catégories
+          </button>
+          <div class="smenu-sep"></div>
+          <button class="smenu-btn" id="sm-settings" onclick="at('settings',this)">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOS4xNCAxMi45NGMuMDQtLjMuMDYtLjYxLjA2LS45NCAwLS4zMi0uMDItLjY0LS4wNy0uOTRsMi4wMy0xLjU4Yy4xOC0uMTQuMjMtLjQxLjEyLS42MWwtMS45Mi0zLjMyYy0uMTItLjIyLS4zNy0uMjktLjU5LS4yMmwtMi4zOS45NmMtLjUtLjM4LTEuMDMtLjctMS42Mi0uOTRsLS4zNi0yLjU0Yy0uMDQtLjI0LS4yNC0uNDEtLjQ4LS40MWgtMy44NGMtLjI0IDAtLjQzLjE3LS40Ny40MWwtLjM2IDIuNTRjLS41OS4yNC0xLjEzLjU3LTEuNjIuOTRsLTIuMzktLjk2Yy0uMjItLjA4LS40NyAwLS41OS4yMkwyLjc0IDguODdjLS4xMi4yMS0uMDguNDcuMTIuNjFsMi4wMyAxLjU4Yy0uMDUuMy0uMDkuNjMtLjA5Ljk0cy4wMi42NC4wNy45NGwtMi4wMyAxLjU4Yy0uMTguMTQtLjIzLjQxLS4xMi42MWwxLjkyIDMuMzJjLjEyLjIyLjM3LjI5LjU5LjIybDIuMzktLjk2Yy41LjM4IDEuMDMuNyAxLjYyLjk0bC4zNiAyLjU0Yy4wNS4yNC4yNC40MS40OC40MWgzLjg0Yy4yNCAwIC40NC0uMTcuNDctLjQxbC4zNi0yLjU0Yy41OS0uMjQgMS4xMy0uNTYgMS42Mi0uOTRsMi4zOS45NmMuMjIuMDguNDcgMCAuNTktLjIybDEuOTItMy4zMmMuMTItLjIyLjA3LS40Ny0uMTItLjYxbC0yLjAxLTEuNTh6TTEyIDE1LjZjLTEuOTggMC0zLjYtMS42Mi0zLjYtMy42czEuNjItMy42IDMuNi0zLjYgMy42IDEuNjIgMy42IDMuNi0xLjYyIDMuNi0zLjYgMy42eiIvPjwvc3ZnPg==" id="ico-sm-settings" class="ico-img" alt="">
+            Paramètres
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenu admin -->
+      <div class="admin-content">
+
+        <!-- Onglets mobile (visible seulement sur mobile/tablette) -->
+        <div class="filter-tabs" style="display:none" id="mobile-atabs">
+          <button class="ftab tous on" onclick="at('orders',this)" data-tab="orders">📋 Commandes</button>
+          <button class="ftab att" onclick="at('products',this)" data-tab="products">💊 Produits</button>
+          <button class="ftab pay" onclick="at('addprod',this)" data-tab="addprod">➕ Ajouter</button>
+          <button class="ftab liv" onclick="at('history',this)" data-tab="history">📅 Historique</button>
+          <button class="ftab tous" onclick="at('settings',this)" data-tab="settings">⚙️ Params</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row" id="stats-row">
+          <div class="stat-card green">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
+            <div><div class="stat-val" id="st-total">0</div><div class="stat-lbl">Total commandes</div></div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+            <div><div class="stat-val" id="st-att">0</div><div class="stat-lbl">En attente</div></div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg></div>
+            <div><div class="stat-val" id="st-pay">0</div><div class="stat-lbl">Payées</div></div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+            <div><div class="stat-val" id="st-liv">0</div><div class="stat-lbl">Livrées</div></div>
+          </div>
+        </div>
+
+        <!-- PANNEAU COMMANDES -->
+        <div id="ap-orders" class="apanel on">
+          <div class="filter-tabs">
+            <button class="ftab tous on" onclick="fo('tous',this)">
+              <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+              Toutes
+            </button>
+            <button class="ftab att" onclick="fo('attente',this)">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+              En attente
+            </button>
+            <button class="ftab pay" onclick="fo('paye',this)">
+              <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2z"/></svg>
+              Payées
+            </button>
+            <button class="ftab liv" onclick="fo('livre',this)">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              Livrées
+            </button>
+          </div>
+          <div class="tbl-wrap">
+            <table class="otbl">
+              <thead><tr><th>N° Cmd</th><th>Date</th><th>Client</th><th>Tél</th><th>Total</th><th>Statut</th><th>Actions</th></tr></thead>
+              <tbody id="otbd"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PANNEAU PRODUITS -->
+        <div id="ap-products" class="apanel">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+            <h3 class="sec-title" style="margin-bottom:0;font-size:1.1rem">
+              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+              Produits
+            </h3>
+            <button class="btn btn-primary btn-sm" onclick="at('addprod',document.getElementById('sm-addprod'))">
+              <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSAxM2gtNnY2aC0ydi02SDV2LTJoNlY1aDJ2Nmg2djJ6Ii8+PC9zdmc+" class="ico-img" alt="">
+              Ajouter un produit
+            </button>
+          </div>
+          <div class="admin-pgrid" id="agd"></div>
+        </div>
+
+        <!-- PANNEAU AJOUTER PRODUIT -->
+        <div id="ap-addprod" class="apanel">
+          <h3 class="sec-title" style="margin-bottom:18px;font-size:1.1rem">
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            <span id="addprod-title">Ajouter un produit</span>
+          </h3>
+          <div class="prod-form-card">
+            <input type="hidden" id="epid">
+            <div class="fgrp">
+              <label>📷 Photo du produit</label>
+              <div class="img-drop" onclick="document.getElementById('pimg').click()" id="idrop">
+                <svg class="drop-icon" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                <div class="drop-txt">
+                  <strong>Appuyez pour choisir une image</strong><br>
+                  Galerie • Gestionnaire de fichiers • Photos<br>
+                  <span style="font-size:.75rem;color:#9ca3af">JPG, PNG, WEBP</span>
+                </div>
+              </div>
+              <input type="file" id="pimg" accept="image/*" style="display:none" onchange="prevImg(event)">
+              <input type="hidden" id="epim">
+              <div class="upbar-wrap" id="upw">
+                <div class="upbar-bg"><div class="upbar" id="upb"></div></div>
+                <p class="text-sm text-muted mt8" id="upt">Envoi en cours...</p>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="fgrp" style="grid-column:1/-1"><label>Nom du produit *</label><input type="text" id="epnm" placeholder="ex: Paracétamol 500mg, Amoxicilline..."></div>
+              <div class="fgrp"><label>Prix (GNF) *</label><input type="number" id="eppr" placeholder="ex: 15000" min="0"></div>
+              <div class="fgrp"><label>Stock disponible</label><input type="number" id="epst" placeholder="ex: 50" min="0"></div>
+              <div class="fgrp">
+              <label>Catégorie</label>
+              <div style="display:flex;gap:8px;align-items:center">
+                <select id="epct" style="flex:1">
+                  <option value="">-- Choisir une catégorie --</option>
+                </select>
+                <button type="button" class="btn btn-outline btn-sm" onclick="showAddCat()" title="Ajouter une catégorie" style="white-space:nowrap;flex-shrink:0">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                  Nouvelle
+                </button>
+              </div>
+            </div>
+              <div class="fgrp"><label>Description</label><textarea id="epds" rows="2" placeholder="Posologie, indications, dosage..."></textarea></div>
+            </div>
+            <div class="flex-gap mt12">
+              <button class="btn btn-primary" onclick="saveProd()">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xNyAzSDVjLTEuMTEgMC0yIC45LTIgMnYxNGMwIDEuMS44OSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY3bC00LTR6bS01IDE2Yy0xLjY2IDAtMy0xLjM0LTMtM3MxLjM0LTMgMy0zIDMgMS4zNCAzIDMtMS4zNCAzLTMgM3ptMy0xMEg1VjVoMTB2NHoiLz48L3N2Zz4=" class="ico-img" alt="">
+                Enregistrer
+              </button>
+              <button class="btn btn-secondary" onclick="resetPF()">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM3NDE1MSI+PHBhdGggZD0iTTE5IDYuNDFMMTcuNTkgNSAxMiAxMC41OSA2LjQxIDUgNSA2LjQxIDEwLjU5IDEyIDUgMTcuNTkgNi40MSAxOSAxMiAxMy40MSAxNy41OSAxOSAxOSAxNy41OSAxMy40MSAxMnoiLz48L3N2Zz4=" class="ico-img" alt="">
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- PANNEAU HISTORIQUE -->
+        <div id="ap-history" class="apanel">
+          <h3 class="sec-title" style="margin-bottom:16px;font-size:1.1rem">
+            <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+            Historique des commandes
+          </h3>
+          <div class="hist-filters">
+            <div class="fgrp">
+              <label>Par date</label>
+              <input type="date" id="hdt" onchange="rHist()" style="max-width:175px">
+            </div>
+            <div class="fgrp">
+              <label>Rechercher</label>
+              <input type="text" id="hsr" placeholder="Code ou nom..." oninput="rHist()" style="max-width:220px">
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="clrH()">
+              <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM3NDE1MSI+PHBhdGggZD0iTTE3LjY1IDYuMzVDMTYuMiA0LjkgMTQuMjEgNCAxMiA0Yy00LjQyIDAtNy45OSAzLjU4LTcuOTkgOHMzLjU3IDggNy45OSA4YzMuNzMgMCA2Ljg0LTIuNTUgNy43My02aC0yLjA4Yy0uODIgMi4zMy0zLjA0IDQtNS42NSA0LTMuMzEgMC02LTIuNjktNi02czIuNjktNiA2LTZjMS42NiAwIDMuMTQuNjkgNC4yMiAxLjc4TDEzIDExaDdWNGwtMi4zNSAyLjM1eiIvPjwvc3ZnPg==" id="ico-hist-refresh" class="ico-img" alt="">
+              Réinitialiser
+            </button>
+            <button class="btn btn-blue btn-sm" onclick="printHist()">
+              <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSA4SDVjLTEuNjYgMC0zIDEuMzQtMyAzdjZoNHY0aDEydi00aDR2LTZjMC0xLjY2LTEuMzQtMy0zLTN6bS0zIDExSDh2LTVoOHY1em0zLTdjLS41NSAwLTEtLjQ1LTEtMXMuNDUtMSAxLTEgMSAuNDUgMSAxLS40NSAxLTEgMXptLTEtOUg2djRoMTJWM3oiLz48L3N2Zz4=" id="ico-hist-print" class="ico-img" alt="">
+              Imprimer l'historique
+            </button>
+          </div>
+          <div class="tbl-wrap">
+            <table class="otbl">
+              <thead><tr><th>N° Commande</th><th>Date</th><th>Client</th><th>Total</th><th>Statut</th><th>Actions</th></tr></thead>
+              <tbody id="htbd"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PANNEAU PARAMÈTRES -->
+        <div id="ap-settings" class="apanel">
+          <h3 class="sec-title" style="margin-bottom:18px;font-size:1.1rem">
+            <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            Paramètres de la Pharmacie
+          </h3>
+          <div class="settings-grid">
+
+            <!-- Logo -->
+            <div class="settings-card">
+              <h3>
+                <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                Logo de la pharmacie
+              </h3>
+              <div class="logo-drop" onclick="document.getElementById('linp').click()" id="lgz">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="var(--g2)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                <p class="text-sm text-muted" id="lgph">Appuyez pour choisir le logo<br><small>PNG, JPG (fond transparent recommandé)</small></p>
+              </div>
+              <input type="file" id="linp" accept="image/*" style="display:none" onchange="prevLogo(event)">
+              <input type="hidden" id="slg">
+              <p class="text-sm text-muted mt8">Le logo apparaît dans le header et sur les factures.</p>
+            </div>
+
+            <!-- Infos générales -->
+            <div class="settings-card">
+              <h3>
+                <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                Informations générales
+              </h3>
+              <div class="fgrp"><label>Nom de la pharmacie</label><input type="text" id="snm" placeholder="Nom complet"></div>
+              <div class="fgrp"><label>Adresse</label><input type="text" id="sad" placeholder="Adresse complète"></div>
+              <div class="fgrp"><label>Téléphone</label><input type="text" id="stl" placeholder="Numéro de contact"></div>
+            </div>
+
+            <!-- Paiement & Email -->
+            <div class="settings-card">
+              <h3>
+                <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                Paiement & Contact
+              </h3>
+              <div class="fgrp"><label>Email commandes</label><input type="email" id="sem" placeholder="email@exemple.com"></div>
+              <div class="fgrp"><label>Numéro OrangeMoney</label><input type="text" id="som" placeholder="+224XXXXXXXXX"></div>
+            </div>
+
+            <!-- Sécurité -->
+            <div class="settings-card">
+              <h3>
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 13c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08A7.24 7.24 0 0 1 12 18z"/></svg>
+                Sécurité Admin
+              </h3>
+              <div class="fgrp">
+                <label>Nouveau mot de passe</label>
+                <div class="pwd-wrap">
+                  <input type="password" id="spw" placeholder="Laisser vide = ne pas changer">
+                  <button class="show-pwd" onclick="togglePwd2()" type="button">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" id="eye2"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                  </button>
+                </div>
+                <p class="text-sm text-muted mt8">Minimum 4 caractères.</p>
+              </div>
+              <button class="btn btn-primary" onclick="saveSet()">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xNyAzSDVjLTEuMTEgMC0yIC45LTIgMnYxNGMwIDEuMS44OSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY3bC00LTR6bS01IDE2Yy0xLjY2IDAtMy0xLjM0LTMtM3MxLjM0LTMgMy0zIDMgMS4zNCAzIDMtMS4zNCAzLTMgM3ptMy0xMEg1VjVoMTB2NHoiLz48L3N2Zz4=" class="ico-img" alt="">
+                Sauvegarder tous les paramètres
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- PANNEAU CATÉGORIES -->
+        <div id="ap-categories" class="apanel">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+            <h3 class="sec-title" style="margin-bottom:0;font-size:1.1rem">
+              <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15s2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg>
+              Catégories de médicaments
+            </h3>
+            <button class="btn btn-primary btn-sm" onclick="showAddCat()">
+              <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSAxM2gtNnY2aC0ydi02SDV2LTJoNlY1aDJ2Nmg2djJ6Ii8+PC9zdmc+" id="ico-add-cat" class="ico-img" alt="">
+              Ajouter une catégorie
+            </button>
+          </div>
+          <!-- Stats catégories -->
+          <div id="cat-stats" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px"></div>
+          <!-- Grille catégories -->
+          <div class="admin-pgrid" id="cat-grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))"></div>
+        </div>
+
+      </div><!-- fin admin-content -->
+    </div><!-- fin admin-layout -->
+  </div><!-- fin pg-admin -->
+
+</div><!-- fin main-content -->
+
+<footer>
+  <strong id="fnm">Maison Médicale HALS-GUINÉE</strong><br>
+  <span id="fad">Gn-Kankan-Kabada I</span> | ☎ <span id="ftl">622940262</span><br>
+  © 2024 — Tous droits réservés
+</footer>
+</div><!-- fin app -->
+
+<!-- Toast -->
+<div class="toast" id="tst">
+  <svg id="tst-ico" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"></svg>
+  <span id="tst-msg"></span>
+</div>
+
+<!-- Modal Catégorie -->
+<div class="modal-ov" id="mod-cat">
+  <div class="modal-box" style="max-width:420px">
+    <button class="modal-close" onclick="cmodCat()">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <h3 style="color:var(--v1);margin-bottom:18px;display:flex;align-items:center;gap:8px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--v1)"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15s2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg>
+      <span id="cat-modal-title">Ajouter une catégorie</span>
+    </h3>
+    <input type="hidden" id="cat-edit-id">
+    <div class="fgrp">
+      <label>Nom de la catégorie *</label>
+      <input type="text" id="cat-name" placeholder="ex: Antidouleur, Vitamines, Antibiotiques...">
+    </div>
+    <div class="fgrp">
+      <label>Description (optionnel)</label>
+      <textarea id="cat-desc" rows="2" placeholder="Description de la catégorie..."></textarea>
+    </div>
+    <div class="fgrp">
+      <label>Couleur / Icône (optionnel)</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap" id="cat-colors">
+        <button type="button" class="cat-clr-btn on" data-color="#006B45" onclick="selColor(this)" style="width:30px;height:30px;border-radius:50%;background:#006B45;border:3px solid transparent;cursor:pointer"></button>
+        <button type="button" class="cat-clr-btn" data-color="#2563EB" onclick="selColor(this)" style="width:30px;height:30px;border-radius:50%;background:#2563EB;border:3px solid transparent;cursor:pointer"></button>
+        <button type="button" class="cat-clr-btn" data-color="#D97706" onclick="selColor(this)" style="width:30px;height:30px;border-radius:50%;background:#D97706;border:3px solid transparent;cursor:pointer"></button>
+        <button type="button" class="cat-clr-btn" data-color="#DC2626" onclick="selColor(this)" style="width:30px;height:30px;border-radius:50%;background:#DC2626;border:3px solid transparent;cursor:pointer"></button>
+        <button type="button" class="cat-clr-btn" data-color="#7C3AED" onclick="selColor(this)" style="width:30px;height:30px;border-radius:50%;background:#7C3AED;border:3px solid transparent;cursor:pointer"></button>
+        <button type="button" class="cat-clr-btn" data-color="#0891B2" onclick="selColor(this)" style="width:30px;height:30px;border-radius:50%;background:#0891B2;border:3px solid transparent;cursor:pointer"></button>
+        <button type="button" class="cat-clr-btn" data-color="#059669" onclick="selColor(this)" style="width:30px;height:30px;border-radius:50%;background:#059669;border:3px solid transparent;cursor:pointer"></button>
+        <button type="button" class="cat-clr-btn" data-color="#DB2777" onclick="selColor(this)" style="width:30px;height:30px;border-radius:50%;background:#DB2777;border:3px solid transparent;cursor:pointer"></button>
+      </div>
+      <input type="hidden" id="cat-color" value="#006B45">
+    </div>
+    <div class="flex-gap" style="margin-top:16px">
+      <button class="btn btn-primary" onclick="saveCat()">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xNyAzSDVjLTEuMTEgMC0yIC45LTIgMnYxNGMwIDEuMS44OSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY3bC00LTR6bS01IDE2Yy0xLjY2IDAtMy0xLjM0LTMtM3MxLjM0LTMgMy0zIDMgMS4zNCAzIDMtMS4zNCAzLTMgM3ptMy0xMEg1VjVoMTB2NHoiLz48L3N2Zz4=" id="ico-save-cat" class="ico-img" alt="">
+        Enregistrer
+      </button>
+      <button class="btn btn-secondary" onclick="cmodCat()">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM3NDE1MSI+PHBhdGggZD0iTTE5IDYuNDFMMTcuNTkgNSAxMiAxMC41OSA2LjQxIDUgNSA2LjQxIDEwLjU5IDEyIDUgMTcuNTkgNi40MSAxOSAxMiAxMy40MSAxNy41OSAxOSAxOSAxNy41OSAxMy40MSAxMnoiLz48L3N2Zz4=" id="ico-cancel-cat" class="ico-img" alt="">
+        Annuler
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal principal -->
+<div class="modal-ov" id="mod">
+  <div class="modal-box">
+    <button class="modal-close" onclick="cmod()">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+    </button>
+    <div id="mbd"></div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   ICÔNES EN IMAGES (SVG Base64) — UTILISÉES PARTOUT DANS L'APP
+   ================================================================ */
+const ICONS = {
+  home: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNkI0NSI+PHBhdGggZD0iTTEwIDIwdi02aDR2Nmg1di04aDNMMTIgMyAyIDEyaDN2OHoiLz48L3N2Zz4=',
+  cart: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNkI0NSI+PHBhdGggZD0iTTcgMThjLTEuMSAwLTIgLjktMiAycy45IDIgMiAyIDItLjkgMi0yLS45LTItMi0yek0xIDJ2MmgybDMuNiA3LjU5TDUuMjUgMTRjLS4xNi4yOC0uMjUuNjEtLjI1Ljk2QzUgMTYuMSA1LjkgMTcgNyAxN2gxMnYtMkg3LjQyYy0uMTQgMC0uMjUtLjExLS4yNS0uMjVsLjAzLS4xMi45LTEuNjNIMTljLjc1IDAgMS40MS0uNDEgMS43NS0xLjAzbDMuNTgtNi40OUExIDEgMCAwIDAgMjMuNDMgNEg1LjIxbC0uOTQtMkgxem0xNiAxNmMtMS4xIDAtMiAuOS0yIDJzLjkgMiAyIDIgMi0uOSAyLTItLjktMi0yLTJ6Ii8+PC9zdmc+',
+  cart_white: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik03IDE4Yy0xLjEgMC0yIC45LTIgMnMuOSAyIDIgMiAyLS45IDItMi0uOS0yLTItMnpNMSAydjJoMmwzLjYgNy41OUw1LjI1IDE0Yy0uMTYuMjgtLjI1LjYxLS4yNS45NkM1IDE2LjEgNS45IDE3IDcgMTdoMTJ2LTJINy40MmMtLjE0IDAtLjI1LS4xMS0uMjUtLjI1bC4wMy0uMTIuOS0xLjYzSDE5Yy43NSAwIDEuNDEtLjQxIDEuNzUtMS4wM2wzLjU4LTYuNDlBMSAxIDAgMCAwIDIzLjQzIDRINS4yMWwtLjk0LTJIMXptMTYgMTZjLTEuMSAwLTIgLjktMiAycy45IDIgMiAyIDItLjkgMi0yLS45LTItMi0yeiIvPjwvc3ZnPg==',
+  admin: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0Q0QTAxNyI+PHBhdGggZD0iTTEyIDFMMyA1djZjMCA1LjU1IDMuODQgMTAuNzQgOSAxMiA1LjE2LTEuMjYgOS02LjQ1IDktMTJWNWwtOS00em0wIDRhMyAzIDAgMSAxIDAgNiAzIDMgMCAwIDEgMC02em0wIDEzYy0yLjUgMC00LjcxLTEuMjgtNi0zLjIyLjAzLTEuOTkgNC0zLjA4IDYtMy4wOCAxLjk5IDAgNS45NyAxLjA5IDYgMy4wOEE3LjI0IDcuMjQgMCAwIDEgMTIgMTh6Ii8+PC9zdmc+',
+  print: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSA4SDVjLTEuNjYgMC0zIDEuMzQtMyAzdjZoNHY0aDEydi00aDR2LTZjMC0xLjY2LTEuMzQtMy0zLTN6bS0zIDExSDh2LTVoOHY1em0zLTdjLS41NSAwLTEtLjQ1LTEtMXMuNDUtMSAxLTEgMSAuNDUgMSAxLS40NSAxLTEgMXptLTEtOUg2djRoMTJWM3oiLz48L3N2Zz4=',
+  save: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xNyAzSDVjLTEuMTEgMC0yIC45LTIgMnYxNGMwIDEuMS44OSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY3bC00LTR6bS01IDE2Yy0xLjY2IDAtMy0xLjM0LTMtM3MxLjM0LTMgMy0zIDMgMS4zNCAzIDMtMS4zNCAzLTMgM3ptMy0xMEg1VjVoMTB2NHoiLz48L3N2Zz4=',
+  edit: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0zIDE3LjI1VjIxaDMuNzVMMTcuODEgOS45NGwtMy43NS0zLjc1TDMgMTcuMjV6TTIwLjcxIDcuMDRjLjM5LS4zOS4zOS0xLjAyIDAtMS40MWwtMi4zNC0yLjM0Yy0uMzktLjM5LTEuMDItLjM5LTEuNDEgMGwtMS44MyAxLjgzIDMuNzUgMy43NSAxLjgzLTEuODN6Ii8+PC9zdmc+',
+  delete: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik02IDE5YzAgMS4xLjkgMiAyIDJoOGMxLjEgMCAyLS45IDItMlY3SDZ2MTJ6TTE5IDRoLTMuNWwtMS0xaC01bC0xIDFINXYyaDE0VjR6Ii8+PC9zdmc+',
+  add: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSAxM2gtNnY2aC0ydi02SDV2LTJoNlY1aDJ2Nmg2djJ6Ii8+PC9zdmc+',
+  check: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMgMTJsLTEuNDIgMS40MUw5IDE5IDIxIDdsLTEuNDEtMS40MXoiLz48L3N2Zz4=',
+  back: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM3NDE1MSI+PHBhdGggZD0iTTIwIDExSDcuODNsNS41OS01LjU5TDEyIDRsLTggOCA4IDggMS40MS0xLjQxTDcuODMgMTNIMjB2LTJ6Ii8+PC9zdmc+',
+  order: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMCA0SDRjLTEuMTEgMC0yIC44OS0yIDJ2MTJjMCAxLjExLjg5IDIgMiAyaDE2YzEuMTEgMCAyLS44OSAyLTJWNmMwLTEuMTEtLjg5LTItMi0yem0wIDE0SDR2LTZoMTZ2NnptMC0xMEg0VjZoMTZ2MnoiLz48L3N2Zz4=',
+  logout: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xNyA3bC0xLjQxIDEuNDFMMTguMTcgMTFIOHYyaDEwLjE3bC0yLjU4IDIuNThMMTcgMTdsNS01ek00IDVoOFYzSDRjLTEuMSAwLTIgLjktMiAydjE0YzAgMS4xLjkgMiAyIDJoOHYtMkg0VjV6Ii8+PC9zdmc+',
+  history: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNkI0NSI+PHBhdGggZD0iTTEzIDNjLTQuOTcgMC05IDQuMDMtOSA5SDFsMy44OSAzLjg5LjA3LjE0TDkgMTJINmMwLTMuODcgMy4xMy03IDctN3M3IDMuMTMgNyA3LTMuMTMgNy03IDdjLTEuOTMgMC0zLjY4LS43OS00Ljk0LTIuMDZsLTEuNDIgMS40MkE4Ljk1NCA4Ljk1NCAwIDAgMCAxMyAyMWM0Ljk3IDAgOS00LjAzIDktOXMtNC4wMy05LTktOXptLTEgNXY1bDQuMjggMi41NC43Mi0xLjIxLTMuNS0yLjA4VjhIMTJ6Ii8+PC9zdmc+',
+  settings: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNkI0NSI+PHBhdGggZD0iTTE5LjE0IDEyLjk0Yy4wNC0uMy4wNi0uNjEuMDYtLjk0IDAtLjMyLS4wMi0uNjQtLjA3LS45NGwyLjAzLTEuNThjLjE4LS4xNC4yMy0uNDEuMTItLjYxbC0xLjkyLTMuMzJjLS4xMi0uMjItLjM3LS4yOS0uNTktLjIybC0yLjM5Ljk2Yy0uNS0uMzgtMS4wMy0uNy0xLjYyLS45NGwtLjM2LTIuNTRjLS4wNC0uMjQtLjI0LS40MS0uNDgtLjQxaC0zLjg0Yy0uMjQgMC0uNDMuMTctLjQ3LjQxbC0uMzYgMi41NGMtLjU5LjI0LTEuMTMuNTctMS42Mi45NGwtMi4zOS0uOTZjLS4yMi0uMDgtLjQ3IDAtLjU5LjIyTDIuNzQgOC44N2MtLjEyLjIxLS4wOC40Ny4xMi42MWwyLjAzIDEuNThjLS4wNS4zLS4wOS42My0uMDkuOTRzLjAyLjY0LjA3Ljk0bC0yLjAzIDEuNThjLS4xOC4xNC0uMjMuNDEtLjEyLjYxbDEuOTIgMy4zMmMuMTIuMjIuMzcuMjkuNTkuMjJsMi4zOS0uOTZjLjUuMzggMS4wMy43IDEuNjIuOTRsLjM2IDIuNTRjLjA1LjI0LjI0LjQxLjQ4LjQxaDMuODRjLjI0IDAgLjQ0LS4xNy40Ny0uNDFsLjM2LTIuNTRjLjU5LS4yNCAxLjEzLS41NiAxLjYyLS45NGwyLjM5Ljk2Yy4yMi4wOC40NyAwIC41OS0uMjJsMS45Mi0zLjMyYy4xMi0uMjIuMDctLjQ3LS4xMi0uNjFsLTIuMDEtMS41OHpNMTIgMTUuNmMtMS45OCAwLTMuNi0xLjYyLTMuNi0zLjZzMS42Mi0zLjYgMy42LTMuNiAzLjYgMS42MiAzLjYgMy42LTEuNjIgMy42LTMuNiAzLjZ6Ii8+PC9zdmc+',
+  category: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNkI0NSI+PHBhdGggZD0iTTEyIDJsLTUuNSA5aDExTDEyIDJ6bTAgMy44NEwxMy45MyA5aC0zLjg3TDEyIDUuODR6TTE3LjUgMTNjLTIuNDkgMC00LjUgMi4wMS00LjUgNC41UzE1LjAxIDIyIDE3LjUgMjJzNC41LTIuMDEgNC41LTQuNVMxOS45OSAxMyAxNy41IDEzem0wIDdjLTEuMzggMC0yLjUtMS4xMi0yLjUtMi41UzE2LjEyIDE1IDE3LjUgMTVzMi41IDEuMTIgMi41IDIuNVMxOC44OCAyMCAxNy41IDIwek0zIDIxLjVoOHYtOEgzdjh6bTItNmg0djRINXYtNHoiLz48L3N2Zz4=',
+  products: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNkI0NSI+PHBhdGggZD0iTTIwIDZoLTIuMThjLjA3LS40NC4xOC0uODguMTgtMS4zNkMxOCAyLjA1IDE1Ljk2IDAgMTMuMzYgMGMtMS4zMSAwLTIuNDguNTUtMy4zMyAxLjQ0TDkgMy41IDcuOTYgMi40NEM3LjExLjU1IDUuOTUgMCA0LjY0IDAgMi4wNCAwIDAgMi4wNSAwIDQuNjRjMCAuNDguMS45Mi4xOCAxLjM2SDB2MTNjMCAxLjEuOSAyIDIgMmgyMGMxLjEgMCAyLS45IDItMlY4YzAtMS4xLS45LTItMi0yek0xMy4zNiAyYzEuMjkgMCAyLjY0IDEuMTQgMi42NCAyLjY0IDAgMS41NS0xLjIgMi4zNi0yLjY0IDIuMzZIMTFWNC42NEMxMSAzLjE0IDEyLjA3IDIgMTMuMzYgMnpNMiA0LjY0QzIgMy4xNCAzLjM1IDIgNC42NCAyIDUuOTMgMiA3IDMuMTQgNyA0LjY0VjdINC4zNkMyLjkyIDcgMiA2LjE5IDIgNC42NHpNMjIgMTlIMnYtOWgyMHY5eiIvPjwvc3ZnPg==',
+  invoice: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xNCAySDZjLTEuMSAwLTIgLjktMiAydjE2YzAgMS4xLjkgMiAyIDJoMTJjMS4xIDAgMi0uOSAyLTJWOGwtNi02em0yIDE2SDh2LTJoOHYyem0wLTRIOHYtMmg4djJ6bS0zLTVWMy41TDE4LjUgOUgxM3oiLz48L3N2Zz4=',
+  paid: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMCA0SDRjLTEuMTEgMC0yIC44OS0yIDJ2MTJjMCAxLjExLjg5IDIgMiAyaDE2YzEuMTEgMCAyLS44OSAyLTJWNmMwLTEuMTEtLjg5LTItMi0yem0wIDE0SDR2LTZoMTZ2NnptMC0xMEg0VjZoMTZ2MnoiLz48L3N2Zz4=',
+  delivered: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMgMTJsLTEuNDIgMS40MUw5IDE5IDIxIDdsLTEuNDEtMS40MXoiLz48L3N2Zz4=',
+  medicine: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNkI0NSI+PHBhdGggZD0iTTYuNSAxMGgtMnY1aDJ2LTV6bTQgMGgtMnY1aDJ2LTV6bTguNSA3SDR2MmgxNXYtMnptLjUtMThIMy41QzIuMTIgMCAxIDEuMTIgMSAyLjVWNWgyMVYyLjVDMjIgMS4xMiAyMC44OCAwIDE5LjUgMHptLjUgMThINHYtMy41QzQgMTMuMTIgNS4xMiAxMiA2LjUgMTJoMTBjMS4zOCAwIDIuNSAxLjEyIDIuNSAyLjVWMTh6bS00LjUtOGgtMnY1aDJ2LTV6Ii8+PC9zdmc+',
+  phone: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik02LjYyIDEwLjc5YzEuNDQgMi44MyAzLjc2IDUuMTQgNi41OSA2LjU5bDIuMi0yLjJjLjI3LS4yNy42Ny0uMzYgMS4wMi0uMjQgMS4xMi4zNyAyLjMzLjU3IDMuNTcuNTcuNTUgMCAxIC40NSAxIDFWMjBjMCAuNTUtLjQ1IDEtMSAxLTkuMzkgMC0xNy03LjYxLTE3LTE3IDAtLjU1LjQ1LTEgMS0xaDMuNWMuNTUgMCAxIC40NSAxIDEgMCAxLjI1LjIgMi40NS41NyAzLjU3LjExLjM1LjAzLjc0LS4yNSAxLjAybC0yLjIgMi4yeiIvPjwvc3ZnPg==',
+  location: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAyQzguMTMgMiA1IDUuMTMgNSA5YzAgNS4yNSA3IDEzIDcgMTNzNy03Ljc1IDctMTNjMC0zLjg3LTMuMTMtNy03LTd6bTAgOS41Yy0xLjM4IDAtMi41LTEuMTItMi41LTIuNXMxLjEyLTIuNSAyLjUtMi41IDIuNSAxLjEyIDIuNSAyLjUtMS4xMiAyLjUtMi41IDIuNXoiLz48L3N2Zz4=',
+  money: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMS44IDEwLjljLTIuMjctLjU5LTMtMS4yLTMtMi4xNSAwLTEuMDkgMS4wMS0xLjg1IDIuNy0xLjg1IDEuNzggMCAyLjQ0Ljg1IDIuNSAyLjFoMi4yMWMtLjA3LTEuNzItMS4xMi0zLjMtMy4yMS0zLjgxVjNoLTN2Mi4xNmMtMS45NC40Mi0zLjUgMS42OC0zLjUgMy42MSAwIDIuMzEgMS45MSAzLjQ2IDQuNyA0LjEzIDIuNS42IDMgMS40OCAzIDIuNDEgMCAuNjktLjQ5IDEuNzktMi43IDEuNzktMi4wNiAwLTIuODctLjkyLTIuOTgtMi4xaC0yLjJjLjEyIDIuMTkgMS43NiAzLjQyIDMuNjggMy44M1YyMWgzdi0yLjE1YzEuOTUtLjM3IDMuNS0xLjUgMy41LTMuNTUgMC0yLjg0LTIuNDMtMy44MS00LjctNC40eiIvPjwvc3ZnPg==',
+  search: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzZiNzI4MCI+PHBhdGggZD0iTTE1LjUgMTRoLS43OWwtLjI4LS4yN0E2LjQ3IDYuNDcgMCAwIDAgMTYgOS41IDYuNSA2LjUgMCAxIDAgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHoiLz48L3N2Zz4=',
+  cancel: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM3NDE1MSI+PHBhdGggZD0iTTE5IDYuNDFMMTcuNTkgNSAxMiAxMC41OSA2LjQxIDUgNSA2LjQxIDEwLjU5IDEyIDUgMTcuNTkgNi40MSAxOSAxMiAxMy40MSAxNy41OSAxOSAxOSAxNy41OSAxMy40MSAxMnoiLz48L3N2Zz4=',
+  refresh: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzM3NDE1MSI+PHBhdGggZD0iTTE3LjY1IDYuMzVDMTYuMiA0LjkgMTQuMjEgNCAxMiA0Yy00LjQyIDAtNy45OSAzLjU4LTcuOTkgOHMzLjU3IDggNy45OSA4YzMuNzMgMCA2Ljg0LTIuNTUgNy43My02aC0yLjA4Yy0uODIgMi4zMy0zLjA0IDQtNS42NSA0LTMuMzEgMC02LTIuNjktNi02czIuNjktNiA2LTZjMS42NiAwIDMuMTQuNjkgNC4yMiAxLjc4TDEzIDExaDdWNGwtMi4zNSAyLjM1eiIvPjwvc3ZnPg==',
+  eye: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzZiNzI4MCI+PHBhdGggZD0iTTEyIDQuNUM3IDQuNSAyLjczIDcuNjEgMSAxMmMxLjczIDQuMzkgNiA3LjUgMTEgNy41czkuMjctMy4xMSAxMS03LjVjLTEuNzMtNC4zOS02LTcuNS0xMS03LjV6TTEyIDE3Yy0yLjc2IDAtNS0yLjI0LTUtNXMyLjI0LTUgNS01IDUgMi4yNCA1IDUtMi4yNCA1LTUgNXptMC04Yy0xLjY2IDAtMyAxLjM0LTMgM3MxLjM0IDMgMyAzIDMtMS4zNCAzLTMtMS4zNC0zLTMtM3oiLz48L3N2Zz4=',
+  upload: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzZiNzI4MCI+PHBhdGggZD0iTTE5LjM1IDEwLjA0QzE4LjY3IDYuNTkgMTUuNjQgNCAxMiA0IDkuMTEgNCA2LjYgNS42NCA1LjM1IDguMDQgMi4zNCA4LjM2IDAgMTAuOTEgMCAxNGMwIDMuMzEgMi42OSA2IDYgNmgxM2MyLjc2IDAgNS0yLjI0IDUtNSAwLTIuNjQtMi4wNS00Ljc4LTQuNjUtNC45NnpNMTQgMTN2NGgtNHYtNEg3bDUtNSA1IDVoLTN6Ii8+PC9zdmc+',
+  image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzZiNzI4MCI+PHBhdGggZD0iTTIxIDE5VjVjMC0xLjEtLjktMi0yLTJINWMtMS4xIDAtMiAuOS0yIDJ2MTRjMCAxLjEuOSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMnpNOC41IDEzLjVsMi41IDMuMDFMMTQuNSAxMmw0LjUgNkg1bDMuNS00LjV6Ii8+PC9zdmc+',
+  orders_list: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzAwNkI0NSI+PHBhdGggZD0iTTE5IDNINWMtMS4xIDAtMiAuOS0yIDJ2MTRjMCAxLjEuOSAyIDIgMmgxNGMxLjEgMCAyLS45IDItMlY1YzAtMS4xLS45LTItMi0yem0tNyAxNEg3di0yaDV2MnptNS00SDd2LTJoMTB2MnptMC00SDdWN2gxMHYyeiIvPjwvc3ZnPg==',
+};
+
+// Créer une balise img avec une icône
+function icoImg(name, size='') {
+  const cls = size === 'lg' ? 'ico-img-lg' : size === 'xl' ? 'ico-img-xl' : 'ico-img';
+  return `<img src="${ICONS[name] || ''}" class="${cls}" alt="">`;
+}
+
+/* ================================================================
+   ÉTAT GLOBAL
+   ================================================================ */
+let SB=null, localMode=false;
+let CFG={name:'Maison Médicale HALS-GUINÉE',address:'Gn-Kankan-Kabada I',
+         contact:'622940262',email:'Camaraibrahima353@gmail.com',
+         om:'+224620434420',pwd:'admin2024',logo:''};
+let prods=[],orders=[],cart=[],lastOrder=null,ordFilt='tous',imgSel=null;
+let adminMode=false; // Admin connecté ou non
+let logoTapCount=0,logoTapTimer=null; // Triple tap pour accès admin
+
+/* ================================================================
+   INITIALISATION
+   ================================================================ */
+window.addEventListener('load',async()=>{
+  // Triple tap sur le logo pour révéler le bouton admin
+  document.getElementById('logo-hdr').addEventListener('click',()=>{
+    logoTapCount++;
+    clearTimeout(logoTapTimer);
+    logoTapTimer=setTimeout(()=>{logoTapCount=0;},800);
+    if(logoTapCount>=3){
+      logoTapCount=0;
+      // Révéler temporairement le bouton admin
+      document.getElementById('nav-admin-btn').style.display='flex';
+      document.getElementById('drawer-admin-btn').style.display='flex';
+      toast('🔐 Accès admin déverrouillé','ok');
+      setTimeout(()=>{
+        if(!adminMode){
+          document.getElementById('nav-admin-btn').style.display='none';
+          document.getElementById('drawer-admin-btn').style.display='none';
+        }
+      },10000);
+    }
+  });
+
+  // Config Supabase
+  if(typeof configEstPrete==='function'&&configEstPrete()){
+    try{
+      SB=supabase.createClient(SUPABASE_CONFIG.url,SUPABASE_CONFIG.key);
+      await SB.from('settings').select('key').limit(1);
+      localStorage.setItem('sb_url',SUPABASE_CONFIG.url);
+      localStorage.setItem('sb_key',SUPABASE_CONFIG.key);
+      launch();return;
+    }catch(e){console.warn('config.js:',e.message);}
+  }
+  const u=localStorage.getItem('sb_url'),k=localStorage.getItem('sb_key');
+  if(u&&k){
+    try{
+      SB=supabase.createClient(u,k);
+      await SB.from('settings').select('key').limit(1);
+      launch();return;
+    }catch{localStorage.removeItem('sb_url');localStorage.removeItem('sb_key');}
+  }
+  document.getElementById('setup').classList.add('on');
+});
+
+async function doConnect(){
+  const u=document.getElementById('su').value.trim();
+  const k=document.getElementById('sk').value.trim();
+  if(!u||!k){document.getElementById('serr').textContent='⚠️ Remplissez les deux champs';return;}
+  try{
+    SB=supabase.createClient(u,k);
+    const{error}=await SB.from('settings').select('key').limit(1);
+    if(error)throw error;
+    localStorage.setItem('sb_url',u);localStorage.setItem('sb_key',k);
+    launch();
+  }catch(e){document.getElementById('serr').textContent='❌ '+e.message;}
+}
+
+function useLocal(){
+  localMode=true;
+  prods=JSON.parse(localStorage.getItem('lp')||'[]');
+  orders=JSON.parse(localStorage.getItem('lo')||'[]');
+  CFG=JSON.parse(localStorage.getItem('lc')||JSON.stringify(CFG));
+  launch();
+}
+
+
+// Initialiser toutes les icônes images après le chargement
+function initIcons() {
+  const map = {
+    // Navigation header
+    'ico-nav-home':    ICONS.home,
+    'ico-nav-cart':    ICONS.cart_white,
+    'ico-nav-admin':   ICONS.admin,
+    // Drawer mobile
+    'ico-dr-home':     ICONS.home,
+    'ico-dr-cart':     ICONS.cart_white,
+    'ico-dr-admin':    ICONS.admin,
+    // Sidebar admin
+    'ico-sm-orders':   ICONS.orders_list,
+    'ico-sm-products': ICONS.products,
+    'ico-sm-addprod':  ICONS.add,
+    'ico-sm-cats':     ICONS.category,
+    'ico-sm-history':  ICONS.history,
+    'ico-sm-settings': ICONS.settings,
+    // Boutons d'action
+    'ico-logout':      ICONS.logout,
+    'ico-hero-cart':   ICONS.cart,
+    'ico-confirm-order': ICONS.check,
+    'ico-print-confirm': ICONS.print,
+    'ico-go-order':    ICONS.order,
+    // Icônes statiques supplémentaires
+    'ico-hist-refresh': ICONS.refresh,
+    'ico-hist-print':   ICONS.print,
+    'ico-add-cat':      ICONS.add,
+    'ico-save-cat':     ICONS.save,
+    'ico-cancel-cat':   ICONS.cancel,
+  };
+  Object.entries(map).forEach(([id, src]) => {
+    const el = document.getElementById(id);
+    if (el) el.src = src;
+  });
+}
+
+async function launch(){
+  document.getElementById('setup').classList.remove('on');
+  document.getElementById('app').classList.add('on');
+  if(!localMode){
+    document.querySelectorAll('.cdot').forEach(d=>d.classList.add('live'));
+    // connexion Supabase établie
+    await loadCFG();await loadProds();rt();
+  }
+  await loadCats();
+  initIcons();
+  applyUI();renderProds();fillCatFilter();
+
+  // Afficher les onglets mobile admin
+  if(window.innerWidth<=1024){
+    document.getElementById('mobile-atabs').style.display='flex';
+  }
+}
+
+function rt(){
+  SB.channel('pc').on('postgres_changes',{event:'*',schema:'public',table:'products'},()=>loadProds().then(renderProds)).subscribe();
+  SB.channel('oc').on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>loadOrds().then(()=>{rOrds();rHist();updStats();})).subscribe();
+  SB.channel('cc').on('postgres_changes',{event:'*',schema:'public',table:'categories'},()=>loadCats()).subscribe();
+}
+
+/* ================================================================
+   CHARGEMENT DONNÉES
+   ================================================================ */
+async function loadCFG(){
+  const{data}=await SB.from('settings').select('*');
+  if(data)data.forEach(r=>{if(r.key in CFG)CFG[r.key]=r.value||'';});
+}
+async function loadProds(){
+  const{data}=await SB.from('products').select('*').order('created_at',{ascending:false});
+  if(data){prods=data;localStorage.setItem('lp',JSON.stringify(prods));}
+}
+async function loadOrds(){
+  const{data}=await SB.from('orders').select('*').order('created_at',{ascending:false});
+  if(data){orders=data;localStorage.setItem('lo',JSON.stringify(orders));}
+}
+
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+function gp(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  document.getElementById('pg-'+p).classList.add('on');
+  const nb=document.getElementById('nav-'+p);if(nb)nb.classList.add('active');
+  if(p==='home')renderProds();
+  if(p==='cart')renderCart();
+  if(p==='admin'){loadOrds().then(()=>{rOrds();rHist();updStats();});rAdmP();fillSet();}
+  window.scrollTo(0,0);
+}
+
+function toggleDrawer(){
+  document.getElementById('mob-drawer').classList.toggle('on');
+  document.getElementById('mob-ov').classList.toggle('on');
+}
+
+/* ================================================================
+   STATS ADMIN
+   ================================================================ */
+function updStats(){
+  document.getElementById('st-total').textContent=orders.length;
+  document.getElementById('st-att').textContent=orders.filter(o=>o.status==='attente').length;
+  document.getElementById('st-pay').textContent=orders.filter(o=>o.status==='paye').length;
+  document.getElementById('st-liv').textContent=orders.filter(o=>o.status==='livre').length;
+  document.getElementById('ord-count').textContent=orders.filter(o=>o.status==='attente').length;
+}
+
+/* ================================================================
+   PRODUITS BOUTIQUE
+   ================================================================ */
+function renderProds(){
+  const g=document.getElementById('pgd');
+  const s=(document.getElementById('srch').value||'').toLowerCase();
+  const c=document.getElementById('csl').value;
+  const cats=[...new Set(prods.map(p=>p.category).filter(Boolean))];
+  const cs=document.getElementById('csl'),cv=cs.value;
+  cs.innerHTML='<option value="">Toutes catégories</option>'+cats.map(x=>`<option value="${x}" ${x===cv?'selected':''}>${x}</option>`).join('');
+  const list=prods.filter(p=>(!s||(p.name||'').toLowerCase().includes(s)||(p.description||'').toLowerCase().includes(s))&&(!c||p.category===c));
+  if(!list.length){
+    g.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg><p>Aucun produit disponible pour le moment.</p></div>`;
+    return;
+  }
+  g.innerHTML=list.map(p=>{
+    const ok=(p.stock||0)>0;
+    return `<div class="pcard">
+      <div class="pimg">${p.img?`<img src="${p.img}" alt="${e(p.name)}" loading="lazy">`:'<svg width="48" height="48" viewBox="0 0 24 24" fill="var(--v1)" style="opacity:.4"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>'}</div>
+      <div class="pbody">
+        <div class="pname">${e(p.name)}</div>
+        ${p.category?`<span class="pcat">${e(p.category)}</span>`:''}
+        <div class="pdesc">${e(p.description||'')}</div>
+        <div class="pprice">${gnf(p.price)}</div>
+        <div class="pstock ${ok?'ok':'out'}">
+          ${ok?`<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>En stock (${p.stock})`:`<svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>Rupture de stock`}
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="aC('${p.id}')" ${!ok?'disabled style="opacity:.4;cursor:not-allowed"':''}>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik03IDE4Yy0xLjEgMC0yIC45LTIgMnMuOSAyIDIgMiAyLS45IDItMi0uOS0yLTItMnpNMSAydjJoMmwzLjYgNy41OUw1LjI1IDE0Yy0uMTYuMjgtLjI1LjYxLS4yNS45NkM1IDE2LjEgNS45IDE3IDcgMTdoMTJ2LTJINy40MmMtLjE0IDAtLjI1LS4xMS0uMjUtLjI1bC4wMy0uMTIuOS0xLjYzSDE5Yy43NSAwIDEuNDEtLjQxIDEuNzUtMS4wM2wzLjU4LTYuNDlBMSAxIDAgMCAwIDIzLjQzIDRINS4yMWwtLjk0LTJIMXptMTYgMTZjLTEuMSAwLTIgLjktMiAycy45IDIgMiAyIDItLjkgMi0yLS45LTItMi0yeiIvPjwvc3ZnPg==" class="ico-img" alt="">
+          Ajouter au panier
+        </button>
+      </div></div>`;
+  }).join('');
+}
+function fp(){renderProds();}
+
+/* ================================================================
+   PANIER
+   ================================================================ */
+function aC(id){
+  const p=prods.find(x=>x.id===id);if(!p||p.stock<=0)return;
+  const ex=cart.find(c=>c.id===id);
+  if(ex){if(ex.qty>=p.stock){toast('⚠️ Stock insuffisant','war');return;}ex.qty++;}
+  else cart.push({id,name:p.name,price:p.price,img:p.img||'',qty:1});
+  updB();toast(`✅ ${p.name} ajouté au panier`,'ok');
+}
+function updB(){document.getElementById('cbg').textContent=cart.reduce((s,c)=>s+c.qty,0);}
+
+function renderCart(){
+  const el=document.getElementById('cbd');
+  if(!cart.length){
+    el.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59L5.25 14c-.16.28-.25.61-.25.96C5 16.1 5.9 17 7 17h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63H19c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 23.43 4H5.21l-.94-2H1z"/></svg><p>Votre panier est vide</p></div>
+    <div style="text-align:center;margin-top:16px"><button class="btn btn-primary btn-lg" onclick="gp('home')"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMCAyMHYtNmg0djZoNXYtOGgzTDEyIDMgMiAxMmgzdjh6Ii8+PC9zdmc+" class="ico-img" alt="">Voir les produits</button></div>`;
+    return;
+  }
+  const tot=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  el.innerHTML=`<div class="cart-wrap"><table class="cart-tbl">
+    <thead><tr><th>Produit</th><th>Prix unitaire</th><th>Quantité</th><th>Sous-total</th><th></th></tr></thead>
+    <tbody>${cart.map((c,i)=>`<tr>
+      <td style="display:flex;align-items:center;gap:10px;min-width:160px">
+        ${c.img?`<img src="${c.img}" style="width:38px;height:38px;object-fit:cover;border-radius:6px;flex-shrink:0">`:'<div style="width:38px;height:38px;background:var(--vp);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">💊</div>'}
+        <span style="font-weight:700">${e(c.name)}</span>
+      </td>
+      <td style="white-space:nowrap;font-weight:600">${gnf(c.price)}</td>
+      <td><div class="qty-ctrl"><button class="qbtn" onclick="cq(${i},-1)">−</button><span class="qval">${c.qty}</span><button class="qbtn" onclick="cq(${i},1)">+</button></div></td>
+      <td style="white-space:nowrap;font-weight:800;color:var(--v1)">${gnf(c.price*c.qty)}</td>
+      <td><button class="btn btn-danger btn-icon btn-sm" onclick="ri(${i})"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik02IDE5YzAgMS4xLjkgMiAyIDJoOGMxLjEgMCAyLS45IDItMlY3SDZ2MTJ6TTE5IDRoLTMuNWwtMS0xaC01bC0xIDFINXYyaDE0VjR6Ii8+PC9zdmc+" class="ico-img" alt=""></button></td>
+    </tr>`).join('')}</tbody>
+  </table>
+  <div class="cart-total">
+    <span>Total à payer :</span>
+    <span style="font-size:1.3rem">${gnf(tot)}</span>
+  </div></div>
+  <div class="flex-gap mt12">
+    <button class="btn btn-primary btn-lg" onclick="goOrd()"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMCA0SDRjLTEuMTEgMC0yIC44OS0yIDJ2MTJjMCAxLjExLjg5IDIgMiAyaDE2YzEuMTEgMCAyLS44OSAyLTJWNmMwLTEuMTEtLjg5LTItMi0yeiIvPjwvc3ZnPg==" class="ico-img" alt="">Commander</button>
+    <button class="btn btn-danger" onclick="clrC()"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik02IDE5YzAgMS4xLjkgMiAyIDJoOGMxLjEgMCAyLS45IDItMlY3SDZ2MTJ6TTE5IDRoLTMuNWwtMS0xaC01bC0xIDFINXYyaDE0VjR6Ii8+PC9zdmc+" class="ico-img" alt="">Vider le panier</button>
+    <button class="btn btn-secondary" onclick="gp('home')"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMCAxMUg3LjgzbDUuNTktNS41OUwxMiA0bC04IDggOCA4IDEuNDEtMS40MUw3LjgzIDEzSDIwdi0yeiIvPjwvc3ZnPg==" class="ico-img" alt="">Continuer mes achats</button>
+  </div>`;
+}
+function cq(i,d){const p=prods.find(x=>x.id===cart[i].id);const n=cart[i].qty+d;if(n<=0){ri(i);return;}if(p&&n>p.stock){toast('⚠️ Stock insuffisant','war');return;}cart[i].qty=n;renderCart();updB();}
+function ri(i){cart.splice(i,1);renderCart();updB();}
+function clrC(){if(!confirm('Vider tout le panier ?'))return;cart=[];renderCart();updB();}
+
+/* ================================================================
+   COMMANDE
+   ================================================================ */
+function goOrd(){
+  if(!cart.length){toast('Panier vide !','err');return;}
+  const tot=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  document.getElementById('orcp').innerHTML=`
+    <div style="background:var(--vp);border-radius:var(--r);padding:18px;margin-bottom:16px">
+      <h3 style="color:var(--v1);margin-bottom:12px;font-size:1rem">📋 Récapitulatif</h3>
+      ${cart.map(c=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,107,69,.1);font-size:.86rem">
+        <span>${e(c.name)} × ${c.qty}</span>
+        <strong>${gnf(c.price*c.qty)}</strong>
+      </div>`).join('')}
+      <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:1.05rem;font-weight:800;color:var(--v1)">
+        <span>Total</span><span>${gnf(tot)}</span>
+      </div>
+    </div>`;
+  document.getElementById('omn').textContent=CFG.om;
+  gp('order');
+}
+
+function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let r='HALS-';for(let i=0;i<6;i++)r+=c[Math.floor(Math.random()*c.length)];return r;}
+
+async function placeOrder(){
+  const nm=document.getElementById('on').value.trim();
+  const ph=document.getElementById('oph').value.trim();
+  const ad=document.getElementById('oad').value.trim();
+  const rf=document.getElementById('oref').value.trim();
+  const nt=document.getElementById('ont').value.trim();
+  if(!nm){toast('⚠️ Entrez votre nom','err');return;}
+  if(!ph){toast('⚠️ Entrez votre téléphone','err');return;}
+  if(!ad){toast('⚠️ Entrez votre adresse','err');return;}
+  const tot=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const code=genCode();
+  const ord={id:code,client_name:nm,phone:ph,address:ad,ref_orange:rf,note:nt,
+             items:JSON.parse(JSON.stringify(cart)),total:tot,status:'attente',
+             created_at:new Date().toISOString()};
+  if(!localMode&&SB){
+    try{
+      await SB.from('orders').insert([ord]);
+      for(const c of cart){const p=prods.find(x=>x.id===c.id);if(p)await SB.from('products').update({stock:Math.max(0,p.stock-c.qty)}).eq('id',c.id);}
+    }catch(e){saveLoc(ord);}
+  }else{saveLoc(ord);}
+  lastOrder=ord;cart=[];updB();
+  ['on','oph','oref','oad','ont'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ccd').textContent=code;
+  gp('confirm');sendEmail(ord);
+}
+
+function saveLoc(o){
+  orders.unshift(o);localStorage.setItem('lo',JSON.stringify(orders));
+  cart.forEach(c=>{const p=prods.find(x=>x.id===c.id);if(p)p.stock=Math.max(0,p.stock-c.qty);});
+  localStorage.setItem('lp',JSON.stringify(prods));
+}
+
+function sendEmail(o){
+  const lines=o.items.map(c=>`  - ${c.name} x${c.qty} = ${gnf(c.price*c.qty)}`).join('\n');
+  const body=`NOUVELLE COMMANDE - ${CFG.name}\n${'='.repeat(36)}\nCode : ${o.id}\nDate : ${fd(o.created_at)}\n\nCLIENT :\nNom     : ${o.client_name}\nTel     : ${o.phone}\nAdresse : ${o.address}\nRef OM  : ${o.ref_orange||'Non renseigne'}\n\nPRODUITS :\n${lines}\n\nTOTAL : ${gnf(o.total)}\n${'='.repeat(36)}\n${o.note?'Note : '+o.note:''}`;
+  window.open(`mailto:${CFG.email}?subject=${encodeURIComponent('Commande '+o.id+' - '+o.client_name)}&body=${encodeURIComponent(body)}`,'_blank');
+}
+
+/* ================================================================
+   FACTURE
+   ================================================================ */
+function bFac(o){
+  const lg=CFG.logo?`<img src="${CFG.logo}" alt="logo">`:'<span style="font-size:2rem">⚕️</span>';
+  const rows=o.items.map(c=>`<tr><td>${e(c.name)}</td><td align="center">${c.qty}</td><td align="right">${gnf(c.price)}</td><td align="right">${gnf(c.price*c.qty)}</td></tr>`).join('');
+  return `<div class="fac">
+    <div class="fac-logo">${lg}</div>
+    <h2>${e(CFG.name)}</h2>
+    <p class="fac-sub">${e(CFG.address)} | Tél: ${CFG.contact}</p>
+    <hr><hr class="thick">
+    <div class="frow"><span><b>N° Facture :</b> ${o.id}</span><span>${fd(o.created_at||o.date)}</span></div>
+    <div class="frow"><span><b>Client :</b> ${e(o.client_name||o.name)}</span><span>Tél: ${o.phone}</span></div>
+    <div class="frow"><span><b>Adresse :</b> ${e(o.address)}</span></div>
+    ${(o.ref_orange||o.ref)?`<div class="frow"><span><b>Réf. Orange :</b> ${o.ref_orange||o.ref}</span></div>`:''}
+    <hr>
+    <table>
+      <thead><tr><th>Produit</th><th align="center">Qté</th><th align="right">Prix</th><th align="right">Total</th></tr></thead>
+      <tbody>${rows}<tr class="ftot"><td colspan="3"><b>TOTAL À PAYER</b></td><td align="right"><b>${gnf(o.total)}</b></td></tr></tbody>
+    </table>
+    <hr>
+    <p style="text-align:center;font-size:.76rem">Paiement OrangeMoney : <b>${CFG.om}</b></p>
+    <hr>
+    <div class="fcode">CODE : ${o.id}</div>
+    <p class="ffoot">Conservez ce code pour suivre ou réclamer votre commande.</p>
+    <p class="ffoot">Merci pour votre confiance !</p>
+  </div>`;
+}
+
+function printFact(o){
+  if(!o)return;
+  document.getElementById('pzone').innerHTML=bFac(o);
+  window.print();
+  setTimeout(()=>document.getElementById('pzone').innerHTML='',1500);
+}
+
+function showFacModal(id){
+  const o=orders.find(x=>x.id===id);if(!o)return;
+  document.getElementById('mbd').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+      <h3 style="color:var(--v1)">Facture — ${o.id}</h3>
+      <div class="flex-gap">
+        ${o.status==='attente'?`<button class="btn btn-blue btn-sm" onclick="setSt('${o.id}','paye');cmod()"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0yMCA0SDRjLTEuMTEgMC0yIC44OS0yIDJ2MTJjMCAxLjExLjg5IDIgMiAyaDE2YzEuMTEgMCAyLS44OSAyLTJWNmMwLTEuMTEtLjg5LTItMi0yem0wIDE0SDR2LTZoMTZ2NnptMC0xMEg0VjZoMTZ2MnoiLz48L3N2Zz4=" class="ico-img" alt="">Marquer payé</button>`:''}
+        ${o.status==='paye'?`<button class="btn btn-primary btn-sm" onclick="setSt('${o.id}','livre');cmod()"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik05IDE2LjE3TDQuODMgMTJsLTEuNDIgMS40MUw5IDE5IDIxIDdsLTEuNDEtMS40MXoiLz48L3N2Zz4=" class="ico-img" alt="">Marquer livré</button>`:''}
+        <button class="btn btn-blue btn-sm" onclick="printFact(orders.find(x=>x.id==='${o.id}'))"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSA4SDVjLTEuNjYgMC0zIDEuMzQtMyAzdjZoNHY0aDEydi00aDR2LTZjMC0xLjY2LTEuMzQtMy0zLTN6bS0zIDExSDh2LTVoOHY1em0zLTdjLS41NSAwLTEtLjQ1LTEtMXMuNDUtMSAxLTEgMSAuNDUgMSAxLS40NSAxLTEgMXptLTEtOUg2djRoMTJWM3oiLz48L3N2Zz4=" class="ico-img" alt="">Imprimer</button>
+      </div>
+    </div>
+    ${bFac(o)}`;
+  omod();
+}
+
+function printHist(){
+  const bd=document.getElementById('hdt').value;
+  const sr=(document.getElementById('hsr').value||'').toLowerCase();
+  const list=[...orders].sort((a,b)=>new Date(b.created_at||b.date)-new Date(a.created_at||a.date))
+    .filter(o=>{const d=(o.created_at||o.date||'');return(!bd||d.startsWith(bd))&&(!sr||o.id.toLowerCase().includes(sr)||(o.client_name||o.name||'').toLowerCase().includes(sr));});
+  if(!list.length){toast('Aucune commande à imprimer','war');return;}
+  const lg=CFG.logo?`<img src="${CFG.logo}" style="max-width:70px;max-height:50px;object-fit:contain">`:'⚕️';
+  const rows=list.map(o=>`<tr><td><b>${o.id}</b></td><td>${fd(o.created_at||o.date)}</td><td>${e(o.client_name||o.name)} - ${o.phone}</td><td align="right">${gnf(o.total)}</td><td>${sl(o.status)}</td></tr>`).join('');
+  document.getElementById('pzone').innerHTML=`<div style="font-family:monospace;font-size:11.5px;padding:15px">
+    <div style="text-align:center;margin-bottom:10px">${lg}<br><b style="font-size:.95rem">${e(CFG.name)}</b><br><span style="font-size:.75rem">${e(CFG.address)} | Tél: ${CFG.contact}</span></div>
+    <hr style="border:1px solid #000;margin:8px 0">
+    <b>HISTORIQUE DES COMMANDES</b>${bd?` — ${bd}`:''}${sr?` — Recherche: "${sr}"`:''}
+    <br><small>Imprimé le ${fd(new Date().toISOString())}</small>
+    <hr style="border:1px solid #000;margin:7px 0">
+    <table style="width:100%;border-collapse:collapse;font-size:10.5px">
+      <thead><tr style="border-bottom:1px solid #000"><th align="left">N° Cmd</th><th align="left">Date</th><th align="left">Client</th><th align="right">Total</th><th align="left">Statut</th></tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr style="border-top:2px solid #000"><td colspan="3"><b>TOTAL GÉNÉRAL</b></td><td align="right"><b>${gnf(list.reduce((s,o)=>s+o.total,0))}</b></td><td><b>${list.length} commandes</b></td></tr></tfoot>
+    </table></div>`;
+  window.print();
+  setTimeout(()=>document.getElementById('pzone').innerHTML='',1500);
+}
+
+/* ================================================================
+   AUTH ADMIN
+   ================================================================ */
+function doLogin(){
+  const pw=document.getElementById('apw').value;
+  if(pw===CFG.pwd){
+    document.getElementById('lerr').textContent='';
+    document.getElementById('apw').value='';
+    adminMode=true;
+    // Garder le bouton admin visible après connexion
+    document.getElementById('nav-admin-btn').style.display='flex';
+    document.getElementById('drawer-admin-btn').style.display='flex';
+    loadOrds().then(()=>{gp('admin');updStats();});
+  }else{
+    document.getElementById('lerr').textContent='❌ Mot de passe incorrect';
+  }
+}
+
+function doLogout(){
+  if(!confirm('Se déconnecter de l\'espace admin ?'))return;
+  adminMode=false;
+  // Cacher le bouton admin après déconnexion
+  document.getElementById('nav-admin-btn').style.display='none';
+  document.getElementById('drawer-admin-btn').style.display='none';
+  gp('home');
+}
+
+function togglePwd(){
+  const i=document.getElementById('apw');
+  i.type=i.type==='password'?'text':'password';
+}
+function togglePwd2(){
+  const i=document.getElementById('spw');
+  i.type=i.type==='password'?'text':'password';
+}
+
+/* ================================================================
+   ADMIN ONGLETS
+   ================================================================ */
+function at(tab,btn){
+  document.querySelectorAll('.apanel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.smenu-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('ap-'+tab).classList.add('on');
+  const sb=document.getElementById('sm-'+tab);if(sb)sb.classList.add('on');
+  if(tab==='orders'){loadOrds().then(()=>{rOrds();updStats();});}
+  if(tab==='products')rAdmP();
+  if(tab==='history')rHist();
+  if(tab==='settings')fillSet();
+  if(tab==='addprod'){
+    document.getElementById('addprod-title').textContent=
+      document.getElementById('epid').value?'Modifier le produit':'Ajouter un produit';
+    fillCatSelect();
+  }
+  if(tab==='categories'){ loadCats().then(rCats); }
+  // Stats visibles seulement sur commandes
+  document.getElementById('stats-row').style.display=tab==='orders'?'grid':'none';
+}
+
+/* ================================================================
+   COMMANDES ADMIN
+   ================================================================ */
+function rOrds(){
+  const tb=document.getElementById('otbd');
+  const list=ordFilt==='tous'?orders:orders.filter(o=>o.status===ordFilt);
+  if(!list.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty-state"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg><p>Aucune commande.</p></div></td></tr>`;return;}
+  tb.innerHTML=list.map(o=>`<tr>
+    <td><b style="color:var(--v1)">${o.id}</b></td>
+    <td style="white-space:nowrap;font-size:.79rem">${fd(o.created_at||o.date)}</td>
+    <td><b>${e(o.client_name||o.name)}</b></td>
+    <td style="color:var(--g2)">${o.phone}</td>
+    <td style="white-space:nowrap;font-weight:800;color:var(--v1)">${gnf(o.total)}</td>
+    <td><span class="badge ${sb2(o.status)}">${sl(o.status)}</span></td>
+    <td>
+      <div class="flex-gap" style="gap:4px">
+        ${o.status==='attente'?`<button class="btn btn-blue btn-sm" onclick="setSt('${o.id}','paye')"><svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2z"/></svg>Payé</button>`:''}
+        ${o.status==='paye'?`<button class="btn btn-primary btn-sm" onclick="setSt('${o.id}','livre')"><svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Livré</button>`:''}
+        <button class="btn btn-secondary btn-sm" onclick="showFacModal('${o.id}')"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>Facture</button>
+      </div>
+    </td></tr>`).join('');
+}
+
+async function setSt(id,st){
+  if(!localMode&&SB){await SB.from('orders').update({status:st}).eq('id',id);await loadOrds();}
+  else{const o=orders.find(x=>x.id===id);if(o){o.status=st;localStorage.setItem('lo',JSON.stringify(orders));}}
+  rOrds();rHist();updStats();toast(`Commande ${id} : ${sl(st)}`,'ok');
+}
+
+function fo(f,btn){
+  ordFilt=f;
+  document.querySelectorAll('.filter-tabs .ftab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');rOrds();
+}
+
+/* ================================================================
+   HISTORIQUE
+   ================================================================ */
+function rHist(){
+  const tb=document.getElementById('htbd');
+  const bd=document.getElementById('hdt').value;
+  const sr=(document.getElementById('hsr').value||'').toLowerCase();
+  const list=[...orders].sort((a,b)=>new Date(b.created_at||b.date)-new Date(a.created_at||a.date))
+    .filter(o=>{const d=(o.created_at||o.date||'');return(!bd||d.startsWith(bd))&&(!sr||o.id.toLowerCase().includes(sr)||(o.client_name||o.name||'').toLowerCase().includes(sr));});
+  if(!list.length){tb.innerHTML=`<tr><td colspan="6"><div class="empty-state"><p>Aucune commande trouvée.</p></div></td></tr>`;return;}
+  tb.innerHTML=list.map(o=>`<tr>
+    <td><b style="color:var(--v1)">${o.id}</b></td>
+    <td style="white-space:nowrap;font-size:.79rem">${fd(o.created_at||o.date)}</td>
+    <td><b>${e(o.client_name||o.name)}</b><br><span style="font-size:.76rem;color:var(--g2)">${o.phone}</span></td>
+    <td style="white-space:nowrap;font-weight:800;color:var(--v1)">${gnf(o.total)}</td>
+    <td><span class="badge ${sb2(o.status)}">${sl(o.status)}</span></td>
+    <td>
+      <div class="flex-gap" style="gap:4px">
+        <button class="btn btn-secondary btn-sm" onclick="showFacModal('${o.id}')"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xNCAySDZjLTEuMSAwLTIgLjktMiAydjE2YzAgMS4xLjkgMiAyIDJoMTJjMS4xIDAgMi0uOSAyLTJWOGwtNi02em0yIDE2SDh2LTJoOHYyem0wLTRIOHYtMmg4djJ6bS0zLTVWMy41TDE4LjUgOUgxM3oiLz48L3N2Zz4=" class="ico-img" alt="">Facture</button>
+        <button class="btn btn-blue btn-sm" onclick="printFact(orders.find(x=>x.id==='${o.id}'))"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSA4SDVjLTEuNjYgMC0zIDEuMzQtMyAzdjZoNHY0aDEydi00aDR2LTZjMC0xLjY2LTEuMzQtMy0zLTN6bS0zIDExSDh2LTVoOHY1em0zLTdjLS41NSAwLTEtLjQ1LTEtMXMuNDUtMSAxLTEgMSAuNDUgMSAxLS40NSAxLTEgMXptLTEtOUg2djRoMTJWM3oiLz48L3N2Zz4=" class="ico-img" alt="">Imprimer</button>
+      </div>
+    </td></tr>`).join('');
+}
+function clrH(){document.getElementById('hdt').value='';document.getElementById('hsr').value='';rHist();}
+
+/* ================================================================
+   PRODUITS ADMIN
+   ================================================================ */
+function prevImg(evt){
+  imgSel=evt.target.files[0];if(!imgSel)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const drop=document.getElementById('idrop');
+    drop.classList.add('has-img');drop.innerHTML='';
+    const im=document.createElement('img');im.src=ev.target.result;drop.appendChild(im);
+    document.getElementById('epim').value=ev.target.result;
+  };r.readAsDataURL(imgSel);
+}
+
+async function uploadImg(file){
+  const ext=file.name.split('.').pop();const path=`p_${Date.now()}.${ext}`;
+  document.getElementById('upw').style.display='block';
+  document.getElementById('upb').style.width='40%';
+  const{data,error}=await SB.storage.from('images').upload(path,file,{upsert:true});
+  if(error){document.getElementById('upw').style.display='none';throw error;}
+  document.getElementById('upb').style.width='100%';
+  document.getElementById('upt').textContent='✅ Image envoyée !';
+  setTimeout(()=>document.getElementById('upw').style.display='none',1000);
+  const{data:ud}=SB.storage.from('images').getPublicUrl(path);
+  return ud.publicUrl;
+}
+
+async function saveProd(){
+  const nm=document.getElementById('epnm').value.trim();
+  const pr=parseFloat(document.getElementById('eppr').value);
+  const st=parseInt(document.getElementById('epst').value)||0;
+  const ct=document.getElementById('epct').value.trim();
+  const ds=document.getElementById('epds').value.trim();
+  const eid=document.getElementById('epid').value;
+  let img=document.getElementById('epim').value;
+  if(!nm){toast('⚠️ Le nom du produit est obligatoire','err');return;}
+  if(isNaN(pr)){toast('⚠️ Le prix est obligatoire','err');return;}
+  if(imgSel&&!localMode&&SB){try{img=await uploadImg(imgSel);}catch(ex){toast('Erreur upload: '+ex.message,'err');}}
+  const d={name:nm,price:pr,stock:st,category:ct,description:ds,img:img||''};
+  if(!localMode&&SB){
+    if(eid){await SB.from('products').update(d).eq('id',eid);}
+    else{await SB.from('products').insert([d]);}
+    await loadProds();
+  }else{
+    if(eid){const i=prods.findIndex(p=>p.id===eid);if(i>=0)prods[i]={id:eid,...d};}
+    else prods.push({id:'P'+Date.now(),...d});
+    localStorage.setItem('lp',JSON.stringify(prods));
+  }
+  toast('✅ Produit '+(eid?'modifié':'ajouté')+' avec succès','ok');
+  resetPF();rAdmP();
+  at('products',document.getElementById('sm-products'));
+}
+
+function resetPF(){
+  ['epid','epnm','eppr','epst','epct','epds','epim'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pimg').value='';imgSel=null;
+  const drop=document.getElementById('idrop');
+  drop.classList.remove('has-img');
+  drop.innerHTML=`<svg class="drop-icon" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+    <div class="drop-txt"><strong>Appuyez pour choisir une image</strong><br>Galerie • Gestionnaire de fichiers • Photos<br><span style="font-size:.75rem;color:#9ca3af">JPG, PNG, WEBP</span></div>`;
+}
+
+function rAdmP(){
+  const el=document.getElementById('agd');
+  if(!prods.length){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg><p>Aucun produit. Utilisez l'onglet "Ajouter produit".</p></div>`;return;}
+  el.innerHTML=prods.map(p=>`<div class="aprod-card">
+    <div class="aprod-thumb">${p.img?`<img src="${p.img}" alt="${e(p.name)}">`:'<svg width="28" height="28" viewBox="0 0 24 24" fill="var(--v1)" style="opacity:.5"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>'}</div>
+    <div class="aprod-info">
+      <div class="aprod-name">${e(p.name)}</div>
+      ${p.category?`<span class="pcat" style="font-size:.7rem">${e(p.category)}</span>`:''}
+      <div class="aprod-price">${gnf(p.price)}</div>
+      <div class="aprod-stock">Stock: ${p.stock||0} unités</div>
+      <div class="aprod-actions">
+        <button class="btn btn-blue btn-sm" onclick="editP('${p.id}')"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0zIDE3LjI1VjIxaDMuNzVMMTcuODEgOS45NGwtMy43NS0zLjc1TDMgMTcuMjV6TTIwLjcxIDcuMDRjLjM5LS4zOS4zOS0xLjAyIDAtMS40MWwtMi4zNC0yLjM0Yy0uMzktLjM5LTEuMDItLjM5LTEuNDEgMGwtMS44MyAxLjgzIDMuNzUgMy43NSAxLjgzLTEuODN6Ii8+PC9zdmc+" class="ico-img" alt="">Modifier</button>
+        <button class="btn btn-danger btn-sm" onclick="delP('${p.id}')"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik02IDE5YzAgMS4xLjkgMiAyIDJoOGMxLjEgMCAyLS45IDItMlY3SDZ2MTJ6TTE5IDRoLTMuNWwtMS0xaC01bC0xIDFINXYyaDE0VjR6Ii8+PC9zdmc+" class="ico-img" alt="">Supprimer</button>
+      </div>
+    </div></div>`).join('');
+}
+
+function editP(id){
+  const p=prods.find(x=>x.id===id);if(!p)return;
+  document.getElementById('epid').value=p.id;
+  document.getElementById('epnm').value=p.name;
+  document.getElementById('eppr').value=p.price;
+  document.getElementById('epst').value=p.stock||0;
+  document.getElementById('epct').value=p.category||'';
+  document.getElementById('epds').value=p.description||'';
+  document.getElementById('epim').value=p.img||'';
+  if(p.img){
+    const drop=document.getElementById('idrop');
+    drop.classList.add('has-img');drop.innerHTML='';
+    const im=document.createElement('img');im.src=p.img;drop.appendChild(im);
+  }
+  at('addprod',document.getElementById('sm-addprod'));
+  window.scrollTo(0,0);
+}
+
+async function delP(id){
+  const p=prods.find(x=>x.id===id);
+  if(!p||!confirm(`Supprimer "${p.name}" ? Cette action est irréversible.`))return;
+  if(!localMode&&SB){await SB.from('products').delete().eq('id',id);await loadProds();}
+  else{prods=prods.filter(x=>x.id!==id);localStorage.setItem('lp',JSON.stringify(prods));rAdmP();}
+  toast('🗑 Produit supprimé','ok');
+}
+
+/* ================================================================
+   PARAMÈTRES
+   ================================================================ */
+function prevLogo(evt){
+  const f=evt.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    document.getElementById('slg').value=ev.target.result;
+    const z=document.getElementById('lgz');
+    z.innerHTML='';
+    const im=document.createElement('img');im.src=ev.target.result;z.appendChild(im);
+  };r.readAsDataURL(f);
+}
+
+function fillSet(){
+  document.getElementById('snm').value=CFG.name;
+  document.getElementById('sad').value=CFG.address;
+  document.getElementById('stl').value=CFG.contact;
+  document.getElementById('sem').value=CFG.email;
+  document.getElementById('som').value=CFG.om;
+  document.getElementById('spw').value='';
+  document.getElementById('slg').value=CFG.logo||'';
+  const z=document.getElementById('lgz');
+  z.innerHTML='';
+  if(CFG.logo){
+    const im=document.createElement('img');im.src=CFG.logo;z.appendChild(im);
+  }else{
+    z.innerHTML=`<svg width="32" height="32" viewBox="0 0 24 24" fill="var(--g2)"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+    <p class="text-sm text-muted" id="lgph">Appuyez pour choisir le logo<br><small>PNG, JPG (fond transparent recommandé)</small></p>`;
+  }
+}
+
+async function saveSet(){
+  CFG.name   =document.getElementById('snm').value.trim()||CFG.name;
+  CFG.address=document.getElementById('sad').value.trim()||CFG.address;
+  CFG.contact=document.getElementById('stl').value.trim()||CFG.contact;
+  CFG.email  =document.getElementById('sem').value.trim()||CFG.email;
+  CFG.om     =document.getElementById('som').value.trim()||CFG.om;
+  CFG.logo   =document.getElementById('slg').value||CFG.logo;
+  const np=document.getElementById('spw').value;
+  if(np&&np.length>=4)CFG.pwd=np;
+  else if(np&&np.length>0){toast('⚠️ Mot de passe minimum 4 caractères','err');return;}
+  localStorage.setItem('lc',JSON.stringify(CFG));
+  if(!localMode&&SB){
+    for(const[k,v]of Object.entries(CFG))await SB.from('settings').upsert({key:k,value:v||''},{onConflict:'key'});
+  }
+  applyUI();toast('✅ Paramètres sauvegardés avec succès','ok');
+}
+
+/* ================================================================
+   MISE À JOUR UI
+   ================================================================ */
+function applyUI(){
+  document.getElementById('hnm').textContent=CFG.name;
+  document.getElementById('hinf').textContent=`${CFG.address} | ☎ ${CFG.contact}`;
+  document.getElementById('badr').textContent=CFG.address;
+  document.getElementById('btel').textContent=CFG.contact;
+  document.getElementById('bom').textContent=CFG.om;
+  document.getElementById('fnm').textContent=CFG.name;
+  document.getElementById('fad').textContent=CFG.address;
+  document.getElementById('ftl').textContent=CFG.contact;
+  document.title=CFG.name;
+  // Logo header
+  const lh=document.getElementById('logo-hdr');
+  if(CFG.logo){
+    lh.innerHTML='';
+    const im=document.createElement('img');
+    im.src=CFG.logo;lh.appendChild(im);
+  }else{
+    lh.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 15h-2v-2h2zm0-4h-2V7h2z"/></svg>';
+  }
+}
+
+/* ================================================================
+   MODAL
+   ================================================================ */
+function omod(){document.getElementById('mod').classList.add('on');}
+function cmod(){document.getElementById('mod').classList.remove('on');}
+document.getElementById('mod').addEventListener('click',e=>{if(e.target===document.getElementById('mod'))cmod();});
+
+/* ================================================================
+   RESPONSIVE — afficher/cacher onglets mobile admin
+   ================================================================ */
+window.addEventListener('resize',()=>{
+  const mTabs=document.getElementById('mobile-atabs');
+  if(mTabs)mTabs.style.display=window.innerWidth<=1024?'flex':'none';
+});
+
+/* ================================================================
+   UTILITAIRES
+   ================================================================ */
+function gnf(v){return new Intl.NumberFormat('fr-GN',{style:'currency',currency:'GNF',minimumFractionDigits:0,maximumFractionDigits:0}).format(v||0);}
+function fd(iso){if(!iso)return'';try{return new Date(iso).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch{return iso;}}
+function sl(s){return{attente:'⏳ En attente',paye:'💳 Payé',livre:'✅ Livré'}[s]||s;}
+function sb2(s){return{attente:'ba',paye:'bp2',livre:'bl2'}[s]||'ba';}
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(msg,type=''){
+  const t=document.getElementById('tst');
+  const icons={ok:'<path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>',err:'<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>',war:'<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>'};
+  document.getElementById('tst-ico').innerHTML=`<svg viewBox="0 0 24 24" fill="currentColor">${icons[type]||icons.ok}</svg>`;
+  document.getElementById('tst-msg').textContent=msg;
+  t.className=`toast show ${type}`;
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ================================================================
+   CATÉGORIES — DONNÉES & FONCTIONS
+   ================================================================ */
+let categories = [];
+
+// Charger les catégories depuis Supabase ou localStorage
+async function loadCats() {
+  if (!localMode && SB) {
+    const { data } = await SB.from('categories').select('*').order('name', { ascending: true });
+    if (data) { categories = data; localStorage.setItem('lcats', JSON.stringify(categories)); }
+  } else {
+    categories = JSON.parse(localStorage.getItem('lcats') || '[]');
+  }
+  fillCatSelect();
+  rCats();
+}
+
+// Remplir le select catégorie dans le formulaire produit
+function fillCatSelect(selectedVal) {
+  const sel = document.getElementById('epct');
+  if (!sel) return;
+  const cur = selectedVal || sel.value;
+  sel.innerHTML = '<option value="">-- Choisir une catégorie --</option>' +
+    categories.map(cat =>
+      `<option value="${e(cat.name)}" ${cat.name === cur ? 'selected' : ''} style="color:${cat.color||'#1a1a1a'}">${e(cat.name)}</option>`
+    ).join('');
+}
+
+// Remplir le select filtre catégorie sur la boutique
+function fillCatFilter() {
+  const cs = document.getElementById('csl');
+  if (!cs) return;
+  const cv = cs.value;
+  cs.innerHTML = '<option value="">Toutes catégories</option>' +
+    categories.map(cat =>
+      `<option value="${e(cat.name)}" ${cat.name === cv ? 'selected' : ''}>${e(cat.name)}</option>`
+    ).join('');
+}
+
+// Afficher la grille des catégories en admin
+function rCats() {
+  const grid = document.getElementById('cat-grid');
+  if (!grid) return;
+
+  // Stats
+  const statsEl = document.getElementById('cat-stats');
+  if (statsEl) {
+    statsEl.innerHTML = `
+      <div class="stat-card green" style="flex:1;min-width:140px">
+        <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15s2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg></div>
+        <div><div class="stat-val">${categories.length}</div><div class="stat-lbl">Catégories</div></div>
+      </div>
+      <div class="stat-card blue" style="flex:1;min-width:140px">
+        <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
+        <div><div class="stat-val">${prods.length}</div><div class="stat-lbl">Produits total</div></div>
+      </div>`;
+  }
+
+  if (!categories.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13z"/></svg>
+      <p>Aucune catégorie. Cliquez "Ajouter une catégorie".</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = categories.map(cat => {
+    const nbProds = prods.filter(p => p.category === cat.name).length;
+    const color = cat.color || '#006B45';
+    return `<div style="background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;border:1px solid rgba(0,0,0,.04)">
+      <div style="background:${color};padding:16px 18px;display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5S16.12 15 17.5 15s2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"/></svg>
+          </div>
+          <span style="color:white;font-weight:800;font-size:.95rem">${e(cat.name)}</span>
+        </div>
+        <span style="background:rgba(255,255,255,.25);color:white;border-radius:20px;padding:3px 10px;font-size:.76rem;font-weight:700">${nbProds} produit${nbProds>1?'s':''}</span>
+      </div>
+      <div style="padding:14px 16px">
+        ${cat.description ? `<p style="font-size:.82rem;color:var(--g2);margin-bottom:10px">${e(cat.description)}</p>` : '<p style="font-size:.82rem;color:#d1d5db;margin-bottom:10px;font-style:italic">Pas de description</p>'}
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-blue btn-sm" onclick="editCat('${cat.id}')">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0zIDE3LjI1VjIxaDMuNzVMMTcuODEgOS45NGwtMy43NS0zLjc1TDMgMTcuMjV6TTIwLjcxIDcuMDRjLjM5LS4zOS4zOS0xLjAyIDAtMS40MWwtMi4zNC0yLjM0Yy0uMzktLjM5LTEuMDItLjM5LTEuNDEgMGwtMS44MyAxLjgzIDMuNzUgMy43NSAxLjgzLTEuODN6Ii8+PC9zdmc+" class="ico-img" alt="">
+            Modifier
+          </button>
+          <button class="btn btn-danger btn-sm" onclick="delCat('${cat.id}','${e(cat.name)}')">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik02IDE5YzAgMS4xLjkgMiAyIDJoOGMxLjEgMCAyLS45IDItMlY3SDZ2MTJ6TTE5IDRoLTMuNWwtMS0xaC01bC0xIDFINXYyaDE0VjR6Ii8+PC9zdmc+" class="ico-img" alt="">
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Afficher le modal d'ajout catégorie
+function showAddCat() {
+  document.getElementById('cat-modal-title').textContent = 'Ajouter une catégorie';
+  document.getElementById('cat-edit-id').value = '';
+  document.getElementById('cat-name').value = '';
+  document.getElementById('cat-desc').value = '';
+  document.getElementById('cat-color').value = '#006B45';
+  // Réinitialiser la sélection couleur
+  document.querySelectorAll('.cat-clr-btn').forEach(b => {
+    b.style.border = '3px solid transparent';
+    b.classList.remove('on');
+  });
+  const first = document.querySelector('.cat-clr-btn');
+  if (first) { first.style.border = '3px solid #1a1a1a'; first.classList.add('on'); }
+  omodCat();
+}
+
+// Sélectionner une couleur
+function selColor(btn) {
+  document.querySelectorAll('.cat-clr-btn').forEach(b => {
+    b.style.border = '3px solid transparent'; b.classList.remove('on');
+  });
+  btn.style.border = '3px solid #1a1a1a';
+  btn.classList.add('on');
+  document.getElementById('cat-color').value = btn.getAttribute('data-color');
+}
+
+// Sauvegarder une catégorie
+async function saveCat() {
+  const name  = document.getElementById('cat-name').value.trim();
+  const desc  = document.getElementById('cat-desc').value.trim();
+  const color = document.getElementById('cat-color').value;
+  const editId = document.getElementById('cat-edit-id').value;
+
+  if (!name) { toast('⚠️ Le nom de la catégorie est obligatoire', 'err'); return; }
+
+  // Vérifier doublon
+  const exists = categories.find(c => c.name.toLowerCase() === name.toLowerCase() && c.id !== editId);
+  if (exists) { toast('⚠️ Cette catégorie existe déjà', 'war'); return; }
+
+  const data = { name, description: desc, color };
+
+  if (!localMode && SB) {
+    if (editId) {
+      await SB.from('categories').update(data).eq('id', editId);
+    } else {
+      await SB.from('categories').insert([data]);
+    }
+    await loadCats();
+  } else {
+    if (editId) {
+      const idx = categories.findIndex(c => c.id === editId);
+      if (idx >= 0) categories[idx] = { ...categories[idx], ...data };
+    } else {
+      categories.push({ id: 'C' + Date.now(), ...data });
+    }
+    localStorage.setItem('lcats', JSON.stringify(categories));
+    fillCatSelect(); fillCatFilter(); rCats();
+  }
+
+  toast('✅ Catégorie ' + (editId ? 'modifiée' : 'ajoutée'), 'ok');
+  cmodCat();
+}
+
+// Modifier une catégorie
+function editCat(id) {
+  const cat = categories.find(c => c.id === id || c.id === parseInt(id));
+  if (!cat) return;
+  document.getElementById('cat-modal-title').textContent = 'Modifier la catégorie';
+  document.getElementById('cat-edit-id').value = cat.id;
+  document.getElementById('cat-name').value = cat.name;
+  document.getElementById('cat-desc').value = cat.description || '';
+  document.getElementById('cat-color').value = cat.color || '#006B45';
+  // Sélectionner la couleur
+  document.querySelectorAll('.cat-clr-btn').forEach(b => {
+    b.style.border = '3px solid transparent'; b.classList.remove('on');
+    if (b.getAttribute('data-color') === cat.color) {
+      b.style.border = '3px solid #1a1a1a'; b.classList.add('on');
+    }
+  });
+  omodCat();
+}
+
+// Supprimer une catégorie
+async function delCat(id, name) {
+  const nbProds = prods.filter(p => p.category === name).length;
+  const msg = nbProds > 0
+    ? `Supprimer "${name}" ? Cette catégorie est utilisée par ${nbProds} produit(s). Les produits ne seront pas supprimés.`
+    : `Supprimer la catégorie "${name}" ?`;
+  if (!confirm(msg)) return;
+
+  if (!localMode && SB) {
+    await SB.from('categories').delete().eq('id', id);
+    await loadCats();
+  } else {
+    categories = categories.filter(c => c.id !== id);
+    localStorage.setItem('lcats', JSON.stringify(categories));
+    fillCatSelect(); fillCatFilter(); rCats();
+  }
+  toast('🗑 Catégorie supprimée', 'ok');
+}
+
+function omodCat() { document.getElementById('mod-cat').classList.add('on'); }
+function cmodCat() { document.getElementById('mod-cat').classList.remove('on'); }
+document.getElementById('mod-cat').addEventListener('click', e => {
+  if (e.target === document.getElementById('mod-cat')) cmodCat();
+});
+
+</script>
+</body>
+</html>
